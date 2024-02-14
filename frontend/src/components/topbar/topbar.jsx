@@ -1,9 +1,21 @@
 ﻿import React from 'react'
+import {NavLink} from 'react-router-dom'
 
-export function topbar() {
+import "./topbar.css"
+
+function Logo() {
     return (
-        <nav class="topbar">
-            Top Bar
+        <NavLink to="/" className="logo">
+            Ansen's<br/>
+            Robot Games
+        </NavLink>
+    )
+}
+
+export function Topbar() {
+    return (
+        <nav className="topbar">
+            <Logo/>
         </nav>
     )
 }

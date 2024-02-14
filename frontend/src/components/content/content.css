@@ -1,0 +1,9 @@
+﻿.content{
+    flex: 1 0 auto;
+    margin: 10px;
+    background-color: rgb(200, 200, 200);
+    height: 600px;
+    margin-right: 250px;
+    border-radius: 20px;
+    padding: 40px;
+}
