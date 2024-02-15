@@ -18,7 +18,7 @@ from actionhistory import ActionHistory
 
 SPEED = 45
 V_THRESH = 2 # Velocity Threshold
-MISTAKE_CHANCE = 30
+MISTAKE_CHANCE = 15
 
 
 def not_moving(droid: SpheroEduAPI):
