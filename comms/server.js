@@ -32,7 +32,7 @@ function commandSphero(msg, complete) {
             channel.sendToQueue(query_queue, Buffer.from(msg));
 
             console.log(" [x] Sent %s", msg);
-            complete()
+            complete("AB")
         });
         setTimeout(function() {
             connection.close();
@@ -61,10 +61,11 @@ function awaitReply(complete) {
 
             console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", response_queue);
 
-            channel.consume(response_queue, function() {
-                console.log("Received completion confirmation from Sphero.")
+            channel.consume(response_queue, function(msg) {
+                var contents = msg.content
+                console.log("Received completion confirmation from Sphero: " + contents)
                 connection.close()
-                complete();
+                complete(contents);
             }, {
                 noAck: true
             });
@@ -85,13 +86,13 @@ app.post("/command", function (req, res, next) {
         var command = req.body.command
         commandSphero(command, complete)
         awaitReply(complete)
-        function complete(){
+        function complete(msg){
             callbackCount++;
             console.log(callbackCount)
             if (callbackCount >= 2) {
-                console.log("Sending reply back to caller.")
+                console.log("Sending reply back to caller: " + msg)
                 res.status(201).send({
-                    reply: "Finished"
+                    reply: msg
                 })
             }
         }     

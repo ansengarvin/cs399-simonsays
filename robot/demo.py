@@ -84,7 +84,7 @@ if __name__ == "__main__":
                 print("This action:", action)
                 # The robot makes a mistake and does the wrong action!
                 if random.randint(0, 100) < MISTAKE_CHANCE:
-                   action = ((actions[i] - 1) % 5) + 1
+                   action = str(((int(actions[i]) - 1) % 5) + 1)
                    mistake = 1
 
                 # Red Action:
