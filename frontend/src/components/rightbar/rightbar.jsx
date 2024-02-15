@@ -3,7 +3,7 @@
 
 export function Rightbar() {
     return (
-        <nav class = "rightbar">
+        <nav className = "rightbar">
             Right Bar
         </nav>
     )

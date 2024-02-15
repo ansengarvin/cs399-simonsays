@@ -77,8 +77,10 @@ app.post("/command", function (req, res, next) {
         req.body.command) {
         // Store data from req.body
         var command = req.body.command
-        commandSphero(command, complete)
-        awaitReply(complete)
+        //commandSphero(command, complete)
+        //awaitReply(complete)
+        complete()
+        complete()
         function complete(){
             callbackCount++;
             console.log(callbackCount)

@@ -2,7 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
-import {Root, Home, SimonSays} from "./Routes"
+import {Root, Home} from "./Routes"
+import {SimonSays, action as postAction} from './components/content/simonsays'
 import './index.css'
 
 
@@ -12,7 +13,11 @@ const router = createBrowserRouter([
     element: <Root/>,
     children: [
       {index: true, element: <Home/>},
-      {path: '/simonsays', element: <SimonSays/>}
+      {
+        path: '/simonsays',
+        element: <SimonSays/>,
+        action: postAction
+      }
     ]
   }
 ])

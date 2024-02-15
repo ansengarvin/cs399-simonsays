@@ -9,7 +9,7 @@ const navlinks = {
 
 export function Leftbar() {
     return (
-        <nav class="leftbar">
+        <nav className="leftbar">
             {Object.keys(navlinks).map(key=>(
                 <NavLink to={navlinks[key]} className="item">
                     {key}

@@ -3,7 +3,7 @@
 
 export function Home() {
     return (
-        <div class="content">
+        <div className="content">
             Choose a robot game to the left!
         </div>
     )

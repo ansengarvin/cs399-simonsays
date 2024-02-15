@@ -19,6 +19,7 @@ from actionhistory import ActionHistory
 SPEED = 90
 V_THRESH = 2 # Velocity Threshold
 
+
 def not_moving(droid: SpheroEduAPI):
     """
     Tells whether the droid is stuck or not.
@@ -36,14 +37,15 @@ def not_moving(droid: SpheroEduAPI):
         print("    Are moving.\n")
         print(droid.get_vertical_acceleration())
         return False
-    
+
+
 def roll_until_collision(droid: SpheroEduAPI, heading):
+    droid.set_matrix_rotation(FrameRotationOptions.ROTATE_90_DEGREES)
     droid.play_matrix_animation(4)
     while 1:
         droid.roll(heading, SPEED, 2)
         if not_moving(droid):
             return
-
 
 
 if __name__ == "__main__":
@@ -53,8 +55,6 @@ if __name__ == "__main__":
     with SpheroEduAPI(toy) as droid:
         # Initializing animation
         register_all_anims(droid)
-        droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
-
         heading = 0
         movement_count = 0
         print(droid.get_location())
@@ -62,6 +62,7 @@ if __name__ == "__main__":
         history = ActionHistory()
 
         while(True):
+            droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
             droid.play_matrix_animation(0)
             command = getCommand(history)
 
@@ -83,36 +84,37 @@ if __name__ == "__main__":
                 # Red Action:
                 if action == '1':
                     droid.play_matrix_animation(1)
-                    sleep(2)
+                    droid.spin(90, 1)
+                    droid.spin(-90, 1)
+                    droid.spin(-90, 1)
+                    droid.spin(90, 1)
 
                 # Blue Action:
                 elif action == '2':
                     droid.play_matrix_animation(2)
-                    sleep(2)
+                    droid.roll(-heading, int(SPEED/2), 2)
 
                 # Green Action:
                 elif action == '3':
                     droid.play_matrix_animation(3)
-                    sleep(2)
+                    droid.spin(90, 2)
+                    heading += 90
+                    droid.roll(heading, int(SPEED/2), 2)
 
                 # Orange Action:
                 elif action == '4':
                     heading = heading + 180
                     roll_until_collision(droid, heading)
-                    sleep(2)
 
                 # Purple Action:
                 elif action == '5':
                     droid.play_matrix_animation(5)
-                    sleep(2)
+                    droid.spin(990, 1)
+                    heading = (heading + 990) % 360
 
                 # Action to play if there's a bug
                 else:
                     droid.play_matrix_animation(6)
                     sleep(2)
-                
-                # Plays an animation in between actions
-                droid.play_matrix_animation(7)
-                sleep(1)
 
             sendResponse()
