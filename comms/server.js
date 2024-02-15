@@ -62,7 +62,8 @@ function awaitReply(complete) {
             console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", response_queue);
 
             channel.consume(response_queue, function(msg) {
-                var contents = msg.content
+                var contents = msg.content.toString()
+                console.log(typeof contents)
                 console.log("Received completion confirmation from Sphero: " + contents)
                 connection.close()
                 complete(contents);

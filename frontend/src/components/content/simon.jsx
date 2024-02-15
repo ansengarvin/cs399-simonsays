@@ -37,6 +37,7 @@ function Game(props) {
     const [command, setCommand] = useState(32)
     const megabool = false;
     const {state, formData} = useNavigation()
+    const response = useActionData()
     return (
         <div className="content">
             <div className = "title">
@@ -78,6 +79,7 @@ function Game(props) {
             ? <div className = "robocheck">Watch the Robot Go!</div>
             : <></>
             }
+            {response != undefined ? console.log("res -- ", response.reply) : console.log("no res")}
             
         </div>
     )
