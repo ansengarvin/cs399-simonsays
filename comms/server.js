@@ -1,10 +1,16 @@
 ﻿const express = require("express")
 const app = express()
 
+// Cors is 100% necessary to get localhost to communicate with this server.
+// Source: https://stackoverflow.com/questions/43150051/how-to-enable-cors-nodejs-with-express
+const cors = require('cors');
+
 // Change the port here
 const PORT = 19931
 
 app.use(express.json())
+
+app.use(cors())
 
 function commandSphero(msg, complete) {
     var amqp = require('amqplib/callback_api');
