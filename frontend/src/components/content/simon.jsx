@@ -41,7 +41,7 @@ function Game(props) {
         <div className="content">
             <div className = "title">
                 <div className = "caption">
-                    Welcome to Simon Says!
+                    Welcome to Sphero Simon!
                 </div>
                 <div className = "explanation">
                     Choose a color and make the robot GO!
@@ -84,7 +84,7 @@ function Game(props) {
 }
 
 
-export function SimonSays(props) {
+export function SpheroSimon(props) {
     const [responding, setResponding] = useState(false)
     if (responding == 1) {
         return <Responding/>;

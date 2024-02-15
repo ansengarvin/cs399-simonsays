@@ -5,7 +5,7 @@ import {Topbar} from './components/topbar/topbar'
 import {Leftbar} from './components/leftbar/leftbar'
 import {Rightbar} from './components/rightbar/rightbar'
 import {Home} from './components/content/home'
-import {SimonSays} from './components/content/simonsays'
+import {SpheroSimon} from './components/content/simon'
 
 export function Root(props) {
   const {children} = props
@@ -22,5 +22,5 @@ export function Root(props) {
 
 export {
   Home,
-  SimonSays
+  SpheroSimon
 }

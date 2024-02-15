@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 import {Root, Home} from "./Routes"
-import {SimonSays, action as postAction} from './components/content/simonsays'
+import {SpheroSimon, action as postAction} from './components/content/simon'
 import './index.css'
 
 
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
     children: [
       {index: true, element: <Home/>},
       {
-        path: '/simonsays',
-        element: <SimonSays/>,
+        path: '/spherosimon',
+        element: <SpheroSimon/>,
         action: postAction
       }
     ]
