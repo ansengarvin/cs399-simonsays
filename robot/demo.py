@@ -83,9 +83,14 @@ if __name__ == "__main__":
                 action = actions[i]
                 print("This action:", action)
                 # The robot makes a mistake and does the wrong action!
+                # Source: https://stackoverflow.com/questions/42999093/generate-random-number-in-range-excluding-some-numbers
                 if random.randint(0, 100) < MISTAKE_CHANCE:
-                   action = str(((int(actions[i]) - 1) % 5) + 1)
-                   mistake = 1
+                    print("Intentionally making mistake")
+                    prev_action = actions[i]
+                    while action == prev_action:
+                        action = str(random.randint(1, 5))
+                        print(action)
+                    mistake = 1
 
                 # Red Action:
                 if action == '1':
@@ -123,13 +128,15 @@ if __name__ == "__main__":
                     droid.play_matrix_animation(6)
                     sleep(2)
             
-            if mistake == 1:
-                droid.play_matrix_animation(7)
-                sendResponse("Mistake")
-                sleep(2)
-                exit()
+                if mistake == 1:
+                    print("Uh oh! We made a mistake!")
+                    droid.play_matrix_animation(7)
+                    sendResponse("Mistake")
+                    sleep(2)
+                    exit()
                 
             else:
+                print("No mistake yet!")
                 sendResponse("OK")
                 
             

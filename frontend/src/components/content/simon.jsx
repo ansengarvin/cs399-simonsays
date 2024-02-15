@@ -79,7 +79,10 @@ function Game(props) {
             ? <div className = "robocheck">Watch the Robot Go!</div>
             : <></>
             }
-            {response != undefined ? console.log("res -- ", response.reply) : console.log("no res")}
+            {state == "idle" && response != undefined && response.reply == "Mistake"
+            ? <div className = "robocheck">Robot made a mistake! Uh-oh!</div> 
+            : <></>
+            }
             
         </div>
     )
