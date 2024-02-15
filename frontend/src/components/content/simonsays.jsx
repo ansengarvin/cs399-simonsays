@@ -1,5 +1,5 @@
 ﻿import {React, useEffect, useState, useRef, useParams} from 'react'
-import {Form, useActionData} from 'react-router-dom'
+import {Form, useActionData, useNavigation} from 'react-router-dom'
 
 import "./content.css"
 
@@ -36,9 +36,17 @@ function Game(props) {
     const {setResponding} = props
     const [command, setCommand] = useState(32)
     const megabool = false;
+    const {state, formData} = useNavigation()
     return (
         <div className="content">
-            Welcome to Simon Says!<br/>
+            <div className = "title">
+                <div className = "caption">
+                    Welcome to Simon Says!
+                </div>
+                <div className = "explanation">
+                    Choose a color and make the robot GO!
+                </div>
+            </div>
             <div className = "buttons">
                 {command == 1
                 ? <button className="command red selected"/>
@@ -63,8 +71,14 @@ function Game(props) {
             </div>
             <Form method="POST">
                 <input type="hidden" name="command" value={command}/>
-                <button>Submit</button>
+                <button className="submit">GO</button>
             </Form>
+            <div className = "spacer"/>
+            
+            <div className = "robocheck">
+                {state}
+            </div>
+            
         </div>
     )
 }

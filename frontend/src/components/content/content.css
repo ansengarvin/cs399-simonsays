@@ -1,5 +1,8 @@
 ﻿.content{
     flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 10px;
     background-color: rgb(200, 200, 200);
     height: 600px;
@@ -8,14 +11,34 @@
     padding: 40px;
 }
 
-/* Source: https://stackoverflow.com/questions/2460100/remove-the-complete-styling-of-an-html-button-submit */
-.command{
-	color: inherit;
+.title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(120, 120, 120);
+    width: 1300px;
+    height: 100px;
+    color: rgb(236, 236, 236);
+    border-radius: 30px;
+}
+
+.title .caption{
+    margin: 10px;
+    font-size: 32px;
+}
+
+button {
+    color: inherit;
 	border: none;
 	padding: 0;
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+}
+
+/* Source: https://stackoverflow.com/questions/2460100/remove-the-complete-styling-of-an-html-button-submit */
+.command{
     height: 100px;
     width: 200px;
     margin: 5px;
@@ -59,4 +82,34 @@
 
 .selected{
     box-shadow: inset -2px 2px 5px black;
+}
+
+.submit {
+    height: 100px;
+    width: 1080px;
+    margin: 5px;
+    background-color: rgb(48, 48, 48);
+    font-size: 24px;
+    color: rgb(236, 236, 236);
+    border-style: solid;
+    border-color: black;
+}
+
+.submit:active {
+    box-shadow: inset -2px 2px 5px rgb(255, 255, 255);
+}
+
+.spacer {
+    height: 100px;
+}
+
+.robocheck{
+    width: 1300px;
+    height: 100px;
+    background-color: rgb(120, 120, 120);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: rgb(236, 236, 236);
 }
