@@ -57,6 +57,7 @@ function awaitReply(complete) {
 
             channel.consume(response_queue, function() {
                 console.log("Received completion confirmation from Sphero.")
+                connection.close()
                 complete();
             }, {
                 noAck: true
@@ -78,10 +79,11 @@ app.post("/command", function (req, res, next) {
         var command = req.body.command
         commandSphero(command, complete)
         awaitReply(complete)
-        console.log("Sending reply back to caller.")
         function complete(){
             callbackCount++;
+            console.log(callbackCount)
             if (callbackCount >= 2) {
+                console.log("Sending reply back to caller.")
                 res.status(201).send({
                     reply: "Finished"
                 })

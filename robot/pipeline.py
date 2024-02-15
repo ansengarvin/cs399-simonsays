@@ -1,11 +1,11 @@
 ﻿import pika
-from actions import Actions
+from actionhistory import ActionHistory
 
 """
     This program was created while following along with this RabbitMQ tutorial: 
     https://www.rabbitmq.com/tutorials/tutorial-one-python.html
 """
-def getCommand(hist: Actions):
+def getCommand(hist: ActionHistory):
     print("Opening command server")
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
