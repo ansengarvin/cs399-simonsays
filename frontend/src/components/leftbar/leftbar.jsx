@@ -5,8 +5,8 @@ import './leftbar.css'
 
 const navlinks = {
     "Simon Says": "/simonsays",
-    "Other Game 1": "/",
-    "Other Game 2": "/"
+    "Other Game 1": "/abc",
+    "Other Game 2": "/def"
 }
 
 export function Leftbar() {

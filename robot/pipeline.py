@@ -24,14 +24,14 @@ def getCommand(hist: ActionHistory):
     channel.start_consuming()
 
 
-def sendResponse():
+def sendResponse(msg):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
     channel = connection.channel()
 
     channel.queue_declare(queue='reply')
 
-    channel.basic_publish(exchange='', routing_key='reply', body='Finished')
+    channel.basic_publish(exchange='', routing_key='reply', body=msg)
 
     print("Response sent.")
     connection.close()

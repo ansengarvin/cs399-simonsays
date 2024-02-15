@@ -16,8 +16,9 @@ import random
 from pipeline import getCommand, sendResponse
 from actionhistory import ActionHistory
 
-SPEED = 90
+SPEED = 45
 V_THRESH = 2 # Velocity Threshold
+MISTAKE_CHANCE = 30
 
 
 def not_moving(droid: SpheroEduAPI):
@@ -52,6 +53,7 @@ if __name__ == "__main__":
     print("Finding Sphero.")
     toy = scanner.find_toy()
     cmd = None
+    mistake = 0
     with SpheroEduAPI(toy) as droid:
         # Initializing animation
         register_all_anims(droid)
@@ -70,7 +72,7 @@ if __name__ == "__main__":
 
             # Immediately exits program if the user sent exit.
             if history.get_recent_action() == '0':
-                sendResponse()
+                sendResponse("Quit")
                 exit()
 
             # Goes through every previous action in order.
@@ -80,6 +82,10 @@ if __name__ == "__main__":
                 sleep(1)
                 action = actions[i]
                 print("This action:", action)
+                # The robot makes a mistake and does the wrong action!
+                if random.randint(0, 100) < MISTAKE_CHANCE:
+                   action = ((actions[i] - 1) % 5) + 1
+                   mistake = 1
 
                 # Red Action:
                 if action == '1':
@@ -89,17 +95,17 @@ if __name__ == "__main__":
                     droid.spin(-90, 1)
                     droid.spin(90, 1)
 
-                # Blue Action:
+                # Green Action:
                 elif action == '2':
                     droid.play_matrix_animation(2)
-                    droid.roll(-heading, int(SPEED/2), 2)
+                    droid.roll(heading, -int(SPEED), 1)
 
-                # Green Action:
+                # Blue Action:
                 elif action == '3':
                     droid.play_matrix_animation(3)
                     droid.spin(90, 2)
                     heading += 90
-                    droid.roll(heading, int(SPEED/2), 2)
+                    droid.roll(heading, int(SPEED), 1)
 
                 # Orange Action:
                 elif action == '4':
@@ -116,5 +122,15 @@ if __name__ == "__main__":
                 else:
                     droid.play_matrix_animation(6)
                     sleep(2)
-
-            sendResponse()
+            
+            if mistake == 1:
+                droid.play_matrix_animation(7)
+                sendResponse("Mistake")
+                sleep(2)
+                exit()
+                
+            else:
+                sendResponse("OK")
+                
+            
+            
