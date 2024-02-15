@@ -6,13 +6,13 @@ Description:
 
 from spherov2.sphero_edu import SpheroEduAPI
 from spherov2.types import Color
-O = Color(244, 144, 0)
-R = Color(255, 0, 0)
-G = Color(37, 166, 20)
-B = Color(20, 93, 166)
+O = Color(120, 54, 0)
+R = Color(105, 0, 0)
+G = Color(0, 105, 7)
+B = Color(0, 5, 105)
 K = Color(0, 0, 0)
-W = Color(255, 255, 255)
-P = Color(116, 58, 171)
+W = Color(128, 128, 128)
+P = Color(51, 0, 105)
 palette=[O, R, G, B, K, W, P]
 
 
