@@ -74,10 +74,10 @@ function Game(props) {
                 <button className="submit">GO</button>
             </Form>
             <div className = "spacer"/>
-            
-            <div className = "robocheck">
-                {state}
-            </div>
+            {state == "submitting"
+            ? <div className = "robocheck">Watch the Robot Go!</div>
+            : <></>
+            }
             
         </div>
     )
