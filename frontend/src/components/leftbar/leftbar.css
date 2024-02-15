@@ -15,12 +15,14 @@
     width: 200px;
     padding: 5px;
     border-radius: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
-nav.leftbar a:hover {
+.item.active{
     background-color: rgb(213, 213, 213)
 }
 
-nav.leftbar a:active {
+.item:hover {
     background-color: rgb(213, 213, 213)
 }

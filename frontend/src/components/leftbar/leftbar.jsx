@@ -4,7 +4,9 @@ import {NavLink} from 'react-router-dom'
 import './leftbar.css'
 
 const navlinks = {
-    "Simon Says": "./simonsays"
+    "Simon Says": "/simonsays",
+    "Other Game 1": "/",
+    "Other Game 2": "/"
 }
 
 export function Leftbar() {
