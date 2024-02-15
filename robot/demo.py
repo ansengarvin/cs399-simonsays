@@ -37,7 +37,10 @@ if __name__ == "__main__":
 
         droid.play_matrix_animation(0)
         command = getCommand(history)
+
         print("Droid has command:")
         history.print_most_recent_action()
 
         droid.play_matrix_animation(1)
+
+        sendResponse()

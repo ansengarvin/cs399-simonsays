@@ -6,11 +6,7 @@ const PORT = 19931
 
 app.use(express.json())
 
-/*
-This was created while following along with this RabbitMQ tutorial: 
-    https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html
-*/
-function commandSphero(msg) {
+function commandSphero(msg, complete) {
     var amqp = require('amqplib/callback_api');
     amqp.connect('amqp://localhost', function(error0, connection) {
         if (error0) {
@@ -30,6 +26,7 @@ function commandSphero(msg) {
             channel.sendToQueue(query_queue, Buffer.from(msg));
 
             console.log(" [x] Sent %s", msg);
+            complete()
         });
         setTimeout(function() {
             connection.close();
@@ -37,16 +34,59 @@ function commandSphero(msg) {
     });
 }
 
+function awaitReply(complete) {
+    console.log("entering function")
+    var amqp = require('amqplib/callback_api');
+
+    amqp.connect('amqp://localhost', function(error0, connection) {
+        if (error0) {
+            throw error0;
+        }
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            var response_queue = 'reply';
+
+            channel.assertQueue(response_queue, {
+                durable: false
+            });
+
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", response_queue);
+
+            channel.consume(response_queue, function() {
+                console.log("Received completion confirmation from Sphero.")
+                complete();
+            }, {
+                noAck: true
+            });
+        });
+    });
+}
+
+/*
+This was created while following along with this RabbitMQ tutorial: 
+    https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html
+*/
 app.post("/command", function (req, res, next) {
+    var callbackCount = 0
     console.log("  -- req.body:", req.body)
     if (req.body &&
         req.body.command) {
         // Store data from req.body
         var command = req.body.command
-        commandSphero(command)
-        res.status(201).send({
-            command
-        })
+        commandSphero(command, complete)
+        awaitReply(complete)
+        console.log("Sending reply back to caller.")
+        function complete(){
+            callbackCount++;
+            if (callbackCount >= 2) {
+                res.status(201).send({
+                    reply: "Finished"
+                })
+            }
+        }     
     } else {
         res.status(400).send({
             err: "Request needs a body with command."
