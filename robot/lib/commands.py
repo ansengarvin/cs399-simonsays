@@ -20,9 +20,13 @@ def roll_until_collision(droid: SpheroEduAPI, heading):
         droid.roll(heading, SPEED, 2)
         if not_moving(droid):
             return
+        
+def orange_roll(droid: SpheroEduAPI, hist: ActionHistory):
+    hist.set_heading(hist.get_heading() + 180)
+    roll_until_collision(droid, hist.get_heading())
 
 
-def look_left_and_right(droid: SpheroEduAPI, heading):
+def look_left_and_right(droid: SpheroEduAPI, hist: ActionHistory):
     """
     Simple function which makes the droid look left and right.
     """
@@ -33,26 +37,32 @@ def look_left_and_right(droid: SpheroEduAPI, heading):
     droid.spin(90, 1)
 
 
-def short_roll_backwards(droid: SpheroEduAPI, heading):
+def short_roll_backwards(droid: SpheroEduAPI, hist: ActionHistory):
     """
+    Green Action.
     Roll backwards away from heading for one second.
     """
     droid.play_matrix_animation(2)
-    droid.roll(heading, -int(SPEED), 1)
+    droid.roll(hist.get_heading(), -int(SPEED), 1)
+    hist.set_heading(hist.get_heading() + 90)
 
 
-def turn_right_and_roll(droid: SpheroEduAPI, heading):
+def turn_right_and_roll(droid: SpheroEduAPI, hist: ActionHistory):
     """
+    Blue Action.
     Turns the droid right and rolls forward in the new heading.
     """
     droid.play_matrix_animation(3)
     droid.spin(90, 2)
-    droid.roll(heading, int(SPEED), 1)
+    hist.set_heading(hist.get_heading() + 90)
+    droid.roll(hist.get_heading(), int(SPEED), 1)
 
 
-def spin_spin_spin(droid: SpheroEduAPI):
+def spin_spin_spin(droid: SpheroEduAPI, hist: ActionHistory):
     """
+    Purple Action.
     Spins the droid three times, and faces it in a new direction.
     """
     droid.play_matrix_animation(5)
     droid.spin(990, 1)
+    hist.set_heading((hist.get_heading() + 990) % 360)

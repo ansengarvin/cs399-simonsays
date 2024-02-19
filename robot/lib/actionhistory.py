@@ -2,6 +2,7 @@
     def __init__(self):
         self.actions = []
         self.count = 0
+        self.heading = 0
 
     def add_action(self, new_action):
         self.actions.append(new_action)
@@ -21,3 +22,10 @@
 
     def get_count(self):
         return self.count
+    
+    def get_heading(self):
+        return self.heading
+    
+    def set_heading(self, new_heading):
+        self.heading = new_heading
+        

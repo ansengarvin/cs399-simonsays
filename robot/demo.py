@@ -18,7 +18,7 @@ from lib.status import *
 from simon.single import *
 
 SPEED = 45
-MISTAKE_CHANCE = 15
+MISTAKE_CHANCE = 1
 
 
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
@@ -38,6 +38,7 @@ def check_all_actions(droid: SpheroEduAPI):
     pass
 
 
+
 if __name__ == "__main__":
     print("Finding Sphero.")
     toy = scanner.find_toy()
@@ -46,7 +47,6 @@ if __name__ == "__main__":
     with SpheroEduAPI(toy) as droid:
         # Initializing animation
         register_all_anims(droid)
-        heading = 0
         movement_count = 0
         print(droid.get_location())
 
@@ -84,26 +84,23 @@ if __name__ == "__main__":
 
                 # Red Action:
                 if action == '1':
-                    look_left_and_right(droid, heading)
+                    look_left_and_right(droid, droid_history)
 
                 # Green Action:
                 elif action == '2':
-                    short_roll_backwards(droid, heading)
+                    short_roll_backwards(droid, droid_history)
 
                 # Blue Action:
                 elif action == '3':
-                    heading += 90
-                    turn_right_and_roll(droid, heading)
+                    turn_right_and_roll(droid, droid_history)
 
                 # Orange Action:
                 elif action == '4':
-                    heading = heading + 180
-                    roll_until_collision(droid, heading)
+                    orange_roll(droid, droid_history)
 
                 # Purple Action:
                 elif action == '5':
-                    heading = (heading + 990) % 360
-                    spin_spin_spin(droid)
+                    spin_spin_spin(droid, droid_history)
                     
                 # Action to play if there's a bug
                 else:
