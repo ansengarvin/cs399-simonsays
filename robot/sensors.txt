@@ -1,0 +1,13 @@
+﻿Keeping note of my sensor findings for the actual gameplay:
+
+"Drop":
+    Vertical acceleration nears 0 as the droid enters freefall. It remains relatively stable when spinning.
+
+"Spin":
+    Z-Axis Gyroscope Sensing skyrockets when the droid is spinning (over 1000). When dropped, Z-spin seems to go up, but never above 200.
+    A good threshold for this would probably be >500 to detect spin alone.
+
+"Light":
+    The ambient light level of my room is around 25-30. When I shine my headlamp at the droid, it shoots up to well over 1000. To account
+    for potential changes in illumination (since I won't be filming on the day that I code this), a good illumination threshold is probably
+    >500.

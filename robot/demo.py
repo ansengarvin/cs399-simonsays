@@ -49,6 +49,23 @@ def roll_until_collision(droid: SpheroEduAPI, heading):
             return
 
 
+# Returns true if the droid's vertical acceleration is 0 (e.g. if the )
+def is_dropped(droid: SpheroEduAPI):
+    if droid.get_vertical_acceleration() < 0.02:
+        return True
+    else:
+        return False
+
+def is_spinning(droid: SpheroEduAPI):
+    pass
+
+def is_lit(droid: SpheroEduAPI):
+    pass
+
+def check_all_actions(droid: SpheroEduAPI):
+    pass
+
+
 if __name__ == "__main__":
     print("Finding Sphero.")
     toy = scanner.find_toy()
@@ -61,24 +78,25 @@ if __name__ == "__main__":
         movement_count = 0
         print(droid.get_location())
 
-        history = ActionHistory()
+        droid_history = ActionHistory()
+        player_history = ActionHistory()
 
         while(True):
             droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
             droid.play_matrix_animation(0)
-            command = getCommand(history)
+            command = getCommand(droid_history)
 
-            print("Droid has new command:", history.get_recent_action())
+            print("Droid has new command:", droid_history.get_recent_action())
 
             # Immediately exits program if the user sent exit.
-            if history.get_recent_action() == '0':
+            if droid_history.get_recent_action() == '0':
                 sendResponse("Quit")
                 exit()
 
             # Goes through every previous action in order.
-            actions = history.get_actions()
+            actions = droid_history.get_actions()
             droid
-            for i in range(history.get_count()):
+            for i in range(droid_history.get_count()):
                 sleep(1)
                 action = actions[i]
                 print("This action:", action)
@@ -138,6 +156,18 @@ if __name__ == "__main__":
             else:
                 print("No mistake yet!")
                 sendResponse("OK")
+
+            # Instructing the player to do a new action
+            player_history.add_action("0")
                 
-            
-            
+            # Awaiting player actions
+            player_actions = player_history.get_actions()
+            for i in range(player_history.get_count()):
+                if player_actions[i] == "0":
+                    print("Drop")
+                
+                elif player_actions[i] == "1":
+                    print("Spin")
+
+                elif player_actions[i] == "2":
+                    print("Light")
