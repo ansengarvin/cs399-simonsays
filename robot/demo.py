@@ -8,8 +8,8 @@ Description:
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
 from anims.anims import *
-from simon.single import *
-from simon.multi import *
+from games.simon.single import *
+from games.simon.multi import *
 
 MISTAKE_CHANCE = 1
 
