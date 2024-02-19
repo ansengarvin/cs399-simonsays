@@ -1,11 +1,7 @@
-﻿from time import sleep
-from spherov2.sphero_edu import SpheroEduAPI
-from anims.anims import *
+﻿from spherov2.sphero_edu import SpheroEduAPI
 from spherov2.commands.io import FrameRotationOptions
-from lib.pipeline import getAction, sendResponse
 from lib.actionhistory import ActionHistory
 from lib.status import *
-from simon.single import *
 
 SPEED = 45
 
