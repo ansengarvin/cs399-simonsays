@@ -8,7 +8,7 @@ Description:
 from time import sleep
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
-from anims import *
+from robot.anims.anims import *
 from locations import Locations
 from spherov2.commands.io import FrameRotationOptions
 import numpy as np
