@@ -84,23 +84,16 @@ if __name__ == "__main__":
 
                 # Red Action:
                 if action == '1':
-                    droid.play_matrix_animation(1)
-                    droid.spin(90, 1)
-                    droid.spin(-90, 1)
-                    droid.spin(-90, 1)
-                    droid.spin(90, 1)
+                    look_left_and_right(droid, heading)
 
                 # Green Action:
                 elif action == '2':
-                    droid.play_matrix_animation(2)
-                    droid.roll(heading, -int(SPEED), 1)
+                    short_roll_backwards(droid, heading)
 
                 # Blue Action:
                 elif action == '3':
-                    droid.play_matrix_animation(3)
-                    droid.spin(90, 2)
                     heading += 90
-                    droid.roll(heading, int(SPEED), 1)
+                    turn_right_and_roll(droid, heading)
 
                 # Orange Action:
                 elif action == '4':
@@ -109,10 +102,9 @@ if __name__ == "__main__":
 
                 # Purple Action:
                 elif action == '5':
-                    droid.play_matrix_animation(5)
-                    droid.spin(990, 1)
                     heading = (heading + 990) % 360
-
+                    spin_spin_spin(droid)
+                    
                 # Action to play if there's a bug
                 else:
                     droid.play_matrix_animation(6)
