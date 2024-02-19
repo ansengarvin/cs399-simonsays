@@ -11,8 +11,6 @@ from anims.anims import *
 from games.simon.single import *
 from games.simon.multi import *
 
-MISTAKE_CHANCE = 1
-
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
 def is_dropped(droid: SpheroEduAPI):
     if droid.get_vertical_acceleration() < 0.02:
