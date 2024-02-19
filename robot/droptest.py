@@ -19,5 +19,5 @@ with SpheroEduAPI(toy) as droid:
     droid.set_stabilization(False)
     while(True):
         #print("Z_Acc:", droid.get_vertical_acceleration())
-        #print("Yaw:", droid.get_gyroscope()['z'])
-        print("Illumination:", droid.get_luminosity())
+        print("Yaw:", droid.get_gyroscope()['z'])
+        #print("Illumination:", droid.get_luminosity())
