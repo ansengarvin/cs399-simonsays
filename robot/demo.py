@@ -13,7 +13,7 @@ from locations import Locations
 from spherov2.commands.io import FrameRotationOptions
 import numpy as np
 import random
-from pipeline import getCommand, sendResponse
+from pipeline import getAction, sendResponse
 from lib.actionhistory import ActionHistory
 
 SPEED = 45
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         while(True):
             droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
             droid.play_matrix_animation(0)
-            command = getCommand(droid_history)
+            command = getAction(droid_history)
 
             print("Droid has new command:", droid_history.get_recent_action())
 
