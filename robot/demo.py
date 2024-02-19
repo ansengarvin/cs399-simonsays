@@ -8,13 +8,13 @@ Description:
 from time import sleep
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
-from robot.anims.anims import *
+from anims.anims import *
 from locations import Locations
 from spherov2.commands.io import FrameRotationOptions
 import numpy as np
 import random
 from pipeline import getCommand, sendResponse
-from actionhistory import ActionHistory
+from lib.actionhistory import ActionHistory
 
 SPEED = 45
 V_THRESH = 2 # Velocity Threshold

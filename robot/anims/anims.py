@@ -15,12 +15,12 @@ W = Color(128, 128, 128)
 P = Color(51, 0, 105)
 palette=[O, R, G, B, K, W, P]
 
-from nums import nums
-from simon import simon
+from anims.nums import nums
+from anims.simon import simon
 
 
 def register_all_anims(droid: SpheroEduAPI):
     for i in range(len(simon)):
         droid.register_matrix_animation(simon[i], palette, 1, False)
     for i in range(len(nums)):
-        droid.register_matrix_animation(nums[i]), palette, 1, False
+        droid.register_matrix_animation(nums[i], palette, 1, False)

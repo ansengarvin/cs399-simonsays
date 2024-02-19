@@ -1,5 +1,5 @@
 ﻿import pika
-from actionhistory import ActionHistory
+from lib.actionhistory import ActionHistory
 
 """
     This program was created while following along with this RabbitMQ tutorial: 
