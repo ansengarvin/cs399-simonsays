@@ -17,9 +17,7 @@ from lib.commands import *
 from lib.status import *
 from simon.single import *
 
-SPEED = 45
 MISTAKE_CHANCE = 1
-
 
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
 def is_dropped(droid: SpheroEduAPI):
@@ -28,16 +26,13 @@ def is_dropped(droid: SpheroEduAPI):
     else:
         return False
 
-def is_spinning(droid: SpheroEduAPI):
-    pass
-
-def is_lit(droid: SpheroEduAPI):
-    pass
-
-def check_all_actions(droid: SpheroEduAPI):
-    pass
-
-
+droid_gameplay_actions = {
+    '1': look_left_and_right,
+    '2': short_roll_backwards,
+    '3': turn_right_and_roll,
+    '4': roll_until_collision,
+    '5': spin_spin_spin
+}
 
 if __name__ == "__main__":
     print("Finding Sphero.")
@@ -82,31 +77,15 @@ if __name__ == "__main__":
                         print(action)
                     mistake = 1
 
-                # Red Action:
-                if action == '1':
-                    look_left_and_right(droid, droid_history)
-
-                # Green Action:
-                elif action == '2':
-                    short_roll_backwards(droid, droid_history)
-
-                # Blue Action:
-                elif action == '3':
-                    turn_right_and_roll(droid, droid_history)
-
-                # Orange Action:
-                elif action == '4':
-                    orange_roll(droid, droid_history)
-
-                # Purple Action:
-                elif action == '5':
-                    spin_spin_spin(droid, droid_history)
-                    
-                # Action to play if there's a bug
-                else:
+                # Instruct the droid to play the action.
+                try:
+                    droid_gameplay_actions[action](droid, droid_history)
+                except:
+                    print("Bug detected.")
                     droid.play_matrix_animation(6)
                     sleep(2)
-            
+                    
+                # If the droid made a mistake, the player won! Exit the program.
                 if mistake == 1:
                     print("Uh oh! We made a mistake!")
                     droid.play_matrix_animation(7)
