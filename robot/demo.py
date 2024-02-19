@@ -9,9 +9,7 @@ from time import sleep
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
 from anims.anims import *
-from locations import Locations
 from spherov2.commands.io import FrameRotationOptions
-import numpy as np
 import random
 from lib.pipeline import getAction, sendResponse
 from lib.actionhistory import ActionHistory
