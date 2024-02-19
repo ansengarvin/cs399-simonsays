@@ -13,7 +13,7 @@ from locations import Locations
 from spherov2.commands.io import FrameRotationOptions
 import numpy as np
 import random
-from pipeline import getAction, sendResponse
+from lib.pipeline import getAction, sendResponse
 from lib.actionhistory import ActionHistory
 
 SPEED = 45
