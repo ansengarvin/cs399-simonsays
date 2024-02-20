@@ -31,7 +31,8 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "human",
-                        element: <SpheroSimonHuman/>
+                        element: <SpheroSimonHuman/>,
+                        action: postAction
                     },
                     {
                         path: "versus",

@@ -30,7 +30,6 @@ export function SpheroSimonLanding(props) {
                     Choose a game!
                 </div>
             </div>
-
             <div className = "buttons">
                 <NavLink className="circle orange" to="robot">Robot-Only</NavLink>
                 <NavLink className="circle blue" to="human">Human-Only</NavLink>
@@ -43,9 +42,7 @@ export function SpheroSimonLanding(props) {
 }
  
 export function SpheroSimonRobot(props) {
-    const {setResponding} = props
     const [command, setCommand] = useState(32)
-    const megabool = false;
     const {state, formData} = useNavigation()
     const response = useActionData()
     return (
@@ -98,11 +95,69 @@ export function SpheroSimonRobot(props) {
     )
 }
 
+const commands = {
+    1: "Drop",
+    2: "Spin",
+    3: "Light"
+}
+
+function HumanStatus(props) {
+    const {state, started, command, count} = props
+    if (started == false) {
+        return(
+            <>
+                Press "Ready" to start playing!
+            </>
+        )
+    } else if (state == "idle") {
+        return(
+            <>
+                Press "Ready" to continue!<br/>
+            </>
+        )
+    } else if (state == "submitting") {
+        return(
+            <>
+                Your new command is {commands[command]}!
+            </>
+        )
+    } else {
+        return(
+            <>
+                There appears to be an unforseen edge case.
+            </>
+        )
+    }
+}
+
 export function SpheroSimonHuman(props) {
+    const [command, setCommand] = useState(32)
+    const [started, setStarted] = useState(false)
+    const {state, formData} = useNavigation()
+    const response = useActionData()
     return (
-        <>
-        Human Music
-        </>
+        <div className="content">
+            <div className = "title">
+                <div className = "caption">
+                    Welcome to Sphero Simon: Human Edition!
+                </div>
+                <div className = "explanation">
+                    The Robot will tell you what to do below.
+                    Do all of its previous commands in order, then do the new one.
+                    If you make it to 9, you win!
+                </div>
+            </div>
+            <div className = "robocheck_human">
+                <HumanStatus started={started} command={command} state={state}/>
+            </div>
+            <Form method="POST">
+                <input type="hidden" name="command" value={command}/>
+                <button className="submit" onClick={()=>{
+                    setCommand( Math.floor(Math.random()*3)+1 )
+                    setStarted(true)
+                }}>Ready!</button>
+            </Form>
+        </div>
     )
 }
 
