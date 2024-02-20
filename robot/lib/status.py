@@ -20,3 +20,24 @@ def not_moving(droid: SpheroEduAPI):
         print("    Are moving.\n")
         print(droid.get_vertical_acceleration())
         return False
+
+
+def is_falling(droid: SpheroEduAPI):
+    if droid.get_vertical_acceleration() < 0.02:
+        return True
+    else:
+        return False
+
+
+def is_spinning(droid: SpheroEduAPI):
+    if droid.get_gyroscope()['z'] > 1000:
+        return True
+    else:
+        return False
+
+
+def is_lit(droid: SpheroEduAPI):
+    if droid.get_luminosity()['ambient_light'] > 200:
+        return True
+    else:
+        return False

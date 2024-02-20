@@ -7,8 +7,10 @@ Description:
 
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
+from spherov2.sphero_edu import EventType
 from anims.anims import *
-from games.simon import simon_robot
+from games.simon import simon_robot, simon_human
+from lib.commands import do_nothing
 
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
 def is_dropped(droid: SpheroEduAPI):
@@ -23,4 +25,5 @@ if __name__ == "__main__":
     cmd = None
     mistake = 0
     with SpheroEduAPI(toy) as droid:
-        simon_robot(droid)
+        droid.register_event(EventType.on_collision, do_nothing)
+        simon_human(droid)

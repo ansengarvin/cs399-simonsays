@@ -1,5 +1,7 @@
 ﻿Keeping note of my sensor findings for the actual gameplay:
 
+For all of these to be true, you have to droid.set_stabilize(false)
+
 "Drop":
     Uses droid.get_vertical_acceleration()
     Vertical acceleration nears 0 as the droid enters freefall. It remains relatively stable when spinning.

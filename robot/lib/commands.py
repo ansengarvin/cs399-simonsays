@@ -5,6 +5,9 @@ from lib.status import *
 
 SPEED = 45
 
+def do_nothing():
+    return
+
 
 def roll_until_collision(droid: SpheroEduAPI, heading):
     """
