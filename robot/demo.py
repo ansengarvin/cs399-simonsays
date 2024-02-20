@@ -26,4 +26,5 @@ if __name__ == "__main__":
     mistake = 0
     with SpheroEduAPI(toy) as droid:
         droid.register_event(EventType.on_collision, do_nothing)
-        simon_human(droid)
+        simon_robot(droid)
+        #simon_human(droid)

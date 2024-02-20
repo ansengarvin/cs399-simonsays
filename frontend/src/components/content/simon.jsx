@@ -1,5 +1,5 @@
 ﻿import {React, useEffect, useState, useRef, useParams} from 'react'
-import {Form, useActionData, useNavigation} from 'react-router-dom'
+import {Form, useActionData, useNavigation, NavLink} from 'react-router-dom'
 
 import "./content.css"
 
@@ -7,18 +7,6 @@ import "./content.css"
  *  https://react.dev/reference/react/useEffect
  *  https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html
  */
-
-function Responding() {
-    var response = 0
-    useEffect(() => {
-    })
-    return (
-        <div className="content">
-            Please watch the robot!
-        </div>
-    )
-}
-
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
     console.log("== action was called, data:", data)
@@ -32,7 +20,29 @@ export async function action({ request, params }) {
     )
 }
 
-function Game(props) {
+export function SpheroSimonLanding(props) {
+    const {setMode} = props
+    return (
+        <div className="content">
+
+            <div className = "title">
+                <div className = "caption">
+                    Choose a game!
+                </div>
+            </div>
+
+            <div className = "buttons">
+                <NavLink className="circle orange" to="robot">Robot-Only</NavLink>
+                <NavLink className="circle blue" to="human">Human-Only</NavLink>
+                <NavLink className="circle red" to="versus">Human vs Robot</NavLink>
+            </div>
+
+        </div>
+    )
+    
+}
+ 
+export function SpheroSimonRobot(props) {
     const {setResponding} = props
     const [command, setCommand] = useState(32)
     const megabool = false;
@@ -88,12 +98,19 @@ function Game(props) {
     )
 }
 
-
-export function SpheroSimon(props) {
-    const [responding, setResponding] = useState(false)
-    if (responding == 1) {
-        return <Responding/>;
-    } else{
-        return <Game setResponding={setResponding}/>;
-    }
+export function SpheroSimonHuman(props) {
+    return (
+        <>
+        Human Music
+        </>
+    )
 }
+
+export function SpheroSimonVersus(props) {
+    return (
+        <>
+        Versus
+        </>
+    )
+}
+
