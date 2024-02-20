@@ -8,8 +8,7 @@ Description:
 from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
 from anims.anims import *
-from games.simon.single import *
-from games.simon.multi import *
+from games.simon import simon_robot
 
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
 def is_dropped(droid: SpheroEduAPI):
