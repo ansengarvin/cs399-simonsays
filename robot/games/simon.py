@@ -105,7 +105,8 @@ def check_correct_action(droid: SpheroEduAPI, command: str):
 def human_turn(droid: SpheroEduAPI, human_history: ActionHistory):
     droid.set_matrix_rotation(FrameRotationOptions.ROTATE_90_DEGREES)
     droid.set_stabilization(False)
-    human_history.add_action(str(random.randint(1, 3)))
+    droid.play_matrix_animation(7)
+    getAction(human_history)
     print("New action is", human_action_names[human_history.get_recent_action()])
     sleep(2)
 
@@ -152,5 +153,8 @@ def simon_human(droid: SpheroEduAPI):
 
     for i in range(9):
         result = human_turn(droid, human_history)
+        sendResponse(str(i+1))
         if result == "Failure":
+            sendResponse("failure")
             return
+    sendResponse("success")

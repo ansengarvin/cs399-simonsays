@@ -102,7 +102,7 @@ const commands = {
 }
 
 function HumanStatus(props) {
-    const {state, started, command, count} = props
+    const {state, started, command, response} = props
     if (started == false) {
         return(
             <>
@@ -110,15 +110,38 @@ function HumanStatus(props) {
             </>
         )
     } else if (state == "idle") {
-        return(
-            <>
-                Press "Ready" to continue!<br/>
-            </>
-        )
+        if (response == undefined) {
+            return(
+                <>
+                    Press "Ready" to continue!
+                </>
+            )
+        }  else if (response.reply == "success") {
+            return (
+                <>
+                    You have won the game!
+                </>
+            )
+        } else if (response.reply == "failure") {
+            return (
+                <>
+                    Oh no! You lost the game!
+                </>
+            )
+        } else {
+            
+            return (
+                <>
+                    Congratulations! You finished round {response.reply}<br/>
+                    Press "Ready" to continue to round {response.reply + 1}!
+                </>
+            )
+        }
     } else if (state == "submitting") {
         return(
             <>
-                Your new command is {commands[command]}!
+                Your new command is {commands[command]}!<br/>
+                Remember to do the previous commands in order!
             </>
         )
     } else {
@@ -148,7 +171,7 @@ export function SpheroSimonHuman(props) {
                 </div>
             </div>
             <div className = "robocheck_human">
-                <HumanStatus started={started} command={command} state={state}/>
+                <HumanStatus started={started} command={command} state={state} response={response}/>
             </div>
             <Form method="POST">
                 <input type="hidden" name="command" value={command}/>
