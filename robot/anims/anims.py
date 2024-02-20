@@ -11,7 +11,7 @@ R = Color(105, 0, 0)
 G = Color(0, 105, 7)
 B = Color(0, 5, 105)
 K = Color(0, 0, 0)
-W = Color(128, 128, 128)
+W = Color(200, 200, 200)
 P = Color(51, 0, 105)
 palette=[O, R, G, B, K, W, P]
 

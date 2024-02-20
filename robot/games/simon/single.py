@@ -14,12 +14,13 @@ droid_gameplay_actions = {
     '1': look_left_and_right,
     '2': short_roll_backwards,
     '3': turn_right_and_roll,
-    '4': roll_until_collision,
+    '4': orange_roll,
     '5': spin_spin_spin
 }
 
 
 def simon_single(droid: SpheroEduAPI):
+    mistake = 0
     # Initializing animation
     register_all_anims(droid)
     movement_count = 0
@@ -60,8 +61,8 @@ def simon_single(droid: SpheroEduAPI):
             # Instruct the droid to play the action.
             try:
                 droid_gameplay_actions[action](droid, droid_history)
-            except:
-                print("Bug detected.")
+            except Exception as e:
+                print("Bug detected:", e)
                 droid.play_matrix_animation(6)
                 sleep(2)
                 
@@ -76,18 +77,3 @@ def simon_single(droid: SpheroEduAPI):
         else:
             print("No mistake yet!")
             sendResponse("OK")
-
-        # Instructing the player to do a new action
-        player_history.add_action("0")
-            
-        # Awaiting player actions
-        player_actions = player_history.get_actions()
-        for i in range(player_history.get_count()):
-            if player_actions[i] == "0":
-                print("Drop")
-            
-            elif player_actions[i] == "1":
-                print("Spin")
-
-            elif player_actions[i] == "2":
-                print("Light")
