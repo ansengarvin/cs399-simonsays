@@ -24,4 +24,4 @@ if __name__ == "__main__":
     cmd = None
     mistake = 0
     with SpheroEduAPI(toy) as droid:
-        simon_single(droid)
+        simon_robot(droid)

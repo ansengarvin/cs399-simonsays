@@ -18,62 +18,61 @@ droid_gameplay_actions = {
     '5': spin_spin_spin
 }
 
-
-def simon_single(droid: SpheroEduAPI):
+def droid_turn(droid: SpheroEduAPI, droid_history: ActionHistory):
     mistake = 0
+    droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
+    droid.play_matrix_animation(0)
+    command = getAction(droid_history)
+
+    print("Droid has new command:", droid_history.get_recent_action())
+
+    # Immediately exits program if the user sent exit.
+    if droid_history.get_recent_action() == '0':
+        sendResponse("Quit")
+        exit()
+
+    # Goes through every previous action in order.
+    actions = droid_history.get_actions()
+    droid
+    for i in range(droid_history.get_count()):
+        sleep(1)
+        action = actions[i]
+        print("This action:", action)
+        # The robot makes a mistake and does the wrong action!
+        # Source: https://stackoverflow.com/questions/42999093/generate-random-number-in-range-excluding-some-numbers
+        if random.randint(0, 100) < MISTAKE_CHANCE:
+            print("Intentionally making mistake")
+            prev_action = actions[i]
+            while action == prev_action:
+                action = str(random.randint(1, 5))
+                print(action)
+            mistake = 1
+
+        # Instruct the droid to play the action.
+        try:
+            droid_gameplay_actions[action](droid, droid_history)
+        except Exception as e:
+            print("Bug detected:", e)
+            droid.play_matrix_animation(6)
+            sleep(2)
+            
+        # If the droid made a mistake, the player won! Exit the program.
+        if mistake == 1:
+            print("Uh oh! We made a mistake!")
+            droid.play_matrix_animation(7)
+            sendResponse("Mistake")
+            sleep(2)
+            exit()
+        
+    else:
+        print("No mistake yet!")
+        sendResponse("OK")
+
+def simon_robot(droid: SpheroEduAPI):
     # Initializing animation
     register_all_anims(droid)
-    movement_count = 0
-    print(droid.get_location())
 
     droid_history = ActionHistory()
-    player_history = ActionHistory()
 
     while(True):
-        droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
-        droid.play_matrix_animation(0)
-        command = getAction(droid_history)
-
-        print("Droid has new command:", droid_history.get_recent_action())
-
-        # Immediately exits program if the user sent exit.
-        if droid_history.get_recent_action() == '0':
-            sendResponse("Quit")
-            exit()
-
-        # Goes through every previous action in order.
-        actions = droid_history.get_actions()
-        droid
-        for i in range(droid_history.get_count()):
-            sleep(1)
-            action = actions[i]
-            print("This action:", action)
-            # The robot makes a mistake and does the wrong action!
-            # Source: https://stackoverflow.com/questions/42999093/generate-random-number-in-range-excluding-some-numbers
-            if random.randint(0, 100) < MISTAKE_CHANCE:
-                print("Intentionally making mistake")
-                prev_action = actions[i]
-                while action == prev_action:
-                    action = str(random.randint(1, 5))
-                    print(action)
-                mistake = 1
-
-            # Instruct the droid to play the action.
-            try:
-                droid_gameplay_actions[action](droid, droid_history)
-            except Exception as e:
-                print("Bug detected:", e)
-                droid.play_matrix_animation(6)
-                sleep(2)
-                
-            # If the droid made a mistake, the player won! Exit the program.
-            if mistake == 1:
-                print("Uh oh! We made a mistake!")
-                droid.play_matrix_animation(7)
-                sendResponse("Mistake")
-                sleep(2)
-                exit()
-            
-        else:
-            print("No mistake yet!")
-            sendResponse("OK")
+        droid_turn(droid, droid_history)
