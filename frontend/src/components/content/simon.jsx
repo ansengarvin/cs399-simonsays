@@ -314,7 +314,7 @@ export function SpheroSimonVersus(props) {
         return(
             <HumanCard
                 title="Sphero Simon Versus: Human Turn"
-                setGameState={doNothing}
+                setGameState={setGameState}
                 round={round}
                 setRound={setRound}
             />
