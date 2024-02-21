@@ -80,7 +80,8 @@ function SpheroConnect(props) {
 function RobotCard(props) {
     const {
         title,
-        setGameState
+        setGameState,
+        caption
     } = props
     const {state, formData} = useNavigation()
     const response = useActionData()
@@ -240,7 +241,8 @@ function HumanCard(props) {
     const {
         title, 
         gameState, setGameState,
-        round, setRound
+        round, setRound,
+        explanationType
     } = props
     const [command, setCommand] = useState(32)
     const {state, formData} = useNavigation()
@@ -254,8 +256,14 @@ function HumanCard(props) {
                 </div>
                 <div className = "explanation">
                     The Robot will tell you what to do below.
-                    Do all of its previous commands in order, then do the new one.
-                    If you make it to 9, you win!
+                    Do all of its previous commands in order, then do the new one.<br/>
+                    {
+                    explanationType == 1
+                        ? <>If you make it to 9, you win!</>
+                        : <>If you go for longer than the robot, you win!
+                            But if it goes to 9, it's a tie!</>
+                    }
+                    
                 </div>
             </div>
             <div className = "robocheck_human">
@@ -301,6 +309,7 @@ export function SpheroSimonHuman(props) {
                 setGameState={doNothing}
                 round={round}
                 setRound={setRound}
+                explanationType={1}
             />
         )
     }
@@ -335,6 +344,7 @@ export function SpheroSimonVersus(props) {
                 round={round}
                 setRound={setRound}
                 gameState={gameState}
+                explanationType={2}
             />
         )
     } else if (gameState == "success") {
