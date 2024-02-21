@@ -8,7 +8,7 @@ from lib.actionhistory import ActionHistory
 from lib.commands import *
 from lib.status import *
 
-MISTAKE_CHANCE = 1
+MISTAKE_CHANCE = 15
 
 droid_gameplay_actions = {
     '1': look_left_and_right,
@@ -63,11 +63,12 @@ def droid_turn(droid: SpheroEduAPI, droid_history: ActionHistory):
             droid.play_matrix_animation(7)
             sendResponse("Mistake")
             sleep(2)
-            exit()
+            return "Mistake"
         
 
     print("No mistake yet!")
     sendResponse("OK")
+    return "Success"
 
 
 human_actions = {
@@ -127,7 +128,7 @@ def human_turn(droid: SpheroEduAPI, human_history: ActionHistory):
                 droid.play_matrix_animation(7)
                 sendResponse("failure")
                 return "Failure"
-        
+    
     return "Success"
 
 
@@ -143,7 +144,9 @@ def simon_robot(droid: SpheroEduAPI):
     droid_history = ActionHistory()
 
     while(True):
-        droid_turn(droid, droid_history)
+        result = droid_turn(droid, droid_history)
+        if result == "Mistake":
+            exit()
 
 
 def simon_human(droid: SpheroEduAPI):
@@ -158,7 +161,27 @@ def simon_human(droid: SpheroEduAPI):
 
     for i in range(9):
         result = human_turn(droid, human_history)
-        sendResponse(str(i+1))
         if result == "Failure":
             return
     sendResponse("success")
+
+def simon_versus(droid: SpheroEduAPI):
+    """
+    Simon game, where the human plays against the robot
+    """
+    register_all_anims(droid)
+
+    sendResponse("game")
+
+    droid_history = ActionHistory()
+    human_history = ActionHistory()
+    
+    for i in range(9):
+        human_result = human_turn(droid, human_history)
+        if human_result == "Failure":
+            return
+        sendResponse(str(i+1))
+        droid_result = droid_turn(droid, droid_history)
+        if droid_result == "Mistake":
+            return
+

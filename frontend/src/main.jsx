@@ -35,7 +35,8 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "versus",
-                        element: <SpheroSimonVersus/>
+                        element: <SpheroSimonVersus/>,
+                        action: postAction
                     }
                 ]
                 

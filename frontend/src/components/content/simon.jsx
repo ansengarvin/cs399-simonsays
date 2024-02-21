@@ -87,6 +87,8 @@ function RobotCard(props) {
     const [command, setCommand] = useState(32)
     if (response != undefined && response.reply == "OK"){
         setGameState("human")
+    } else if (response != undefined && response.reply == "Mistake") {
+        setGameState("failure")
     }
     return (
         <div className="content">

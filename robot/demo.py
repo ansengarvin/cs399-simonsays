@@ -9,7 +9,7 @@ from spherov2 import scanner
 from spherov2.sphero_edu import SpheroEduAPI
 from spherov2.sphero_edu import EventType
 from anims.anims import *
-from games.simon import simon_robot, simon_human
+from games.simon import simon_robot, simon_human, simon_versus
 from lib.commands import do_nothing
 from lib.gametype import GameType
 from lib.pipeline import getGame
@@ -40,6 +40,6 @@ if __name__ == "__main__":
         elif (game == "2"):
             simon_human(droid)
         elif (game == "3"):
-            print("Verus")
+            simon_versus(droid)
         else:
             print("Bug detected.")
