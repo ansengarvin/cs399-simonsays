@@ -300,7 +300,7 @@ export function SpheroSimonVersus(props) {
             <SpheroConnect 
                 title="Welcome to Sphero Simon: Versus Edition!"
                 setStarted={setStarted}
-                type="2"   
+                type="3"   
             />
         )
     } else if (gameState == "robot") {
