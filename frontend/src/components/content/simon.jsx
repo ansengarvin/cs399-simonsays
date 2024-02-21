@@ -176,7 +176,7 @@ function HumanStatus(props) {
             return (
                 <>
                     Congratulations! You finished round {response.reply}<br/>
-                    Press "Ready" to continue to round {response.reply + 1}!
+                    Press "Ready" to continue to round {parseInt(response.reply) + 1}!
                 </>
             )
         }
