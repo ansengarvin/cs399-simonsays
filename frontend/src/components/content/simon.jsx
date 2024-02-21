@@ -227,7 +227,8 @@ function HumanStatus(props) {
         return(
             <>
                 Your new command is {commands[command]}!<br/>
-                Remember to do the previous commands in order!
+                Wait until the numbers shows up, and do the previous commands in order.
+                Then, {commands[command]} the sphero!
             </>
         )
     } else {
