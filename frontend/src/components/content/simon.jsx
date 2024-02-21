@@ -150,7 +150,8 @@ function HumanStatus(props) {
                     Press "Ready" to continue!
                 </>
             )
-        }  else if (response.reply == "success") {
+        }  
+        else if (response.reply == "success") {
             return (
                 <>
                     You have won the game!
@@ -162,7 +163,15 @@ function HumanStatus(props) {
                     Oh no! You lost the game!
                 </>
             )
-        } else {
+        } else if (response.reply == "game"){
+            return (
+                <>
+                    Sphero connected!<br/>
+                    Press "Ready" to start!
+                </>
+            )
+
+        }else {
             
             return (
                 <>
@@ -194,28 +203,38 @@ export function SpheroSimonHuman(props) {
     const {state, formData} = useNavigation()
     const response = useActionData()
     return (
-        <div className="content">
-            <div className = "title">
-                <div className = "caption">
-                    {title}
+        <>
+            { started == false
+            ? <SpheroConnect 
+                setStarted={setStarted}
+                type="2"
+                title="Welcome to Sphero Simon: Human Edition!"
+            />
+
+            : <div className="content">
+                <div className = "title">
+                    <div className = "caption">
+                        {title}
+                    </div>
+                    <div className = "explanation">
+                        The Robot will tell you what to do below.
+                        Do all of its previous commands in order, then do the new one.
+                        If you make it to 9, you win!
+                    </div>
                 </div>
-                <div className = "explanation">
-                    The Robot will tell you what to do below.
-                    Do all of its previous commands in order, then do the new one.
-                    If you make it to 9, you win!
+                <div className = "robocheck_human">
+                    <HumanStatus started={started} command={command} state={state} response={response}/>
                 </div>
+                <Form method="POST">
+                    <input type="hidden" name="command" value={command}/>
+                    <button className="submit" onClick={()=>{
+                        setCommand( Math.floor(Math.random()*3)+1 )
+                        setStarted(true)
+                    }}>Ready!</button>
+                </Form>
             </div>
-            <div className = "robocheck_human">
-                <HumanStatus started={started} command={command} state={state} response={response}/>
-            </div>
-            <Form method="POST">
-                <input type="hidden" name="command" value={command}/>
-                <button className="submit" onClick={()=>{
-                    setCommand( Math.floor(Math.random()*3)+1 )
-                    setStarted(true)
-                }}>Ready!</button>
-            </Form>
-        </div>
+            }
+        </>
     )
 }
 
