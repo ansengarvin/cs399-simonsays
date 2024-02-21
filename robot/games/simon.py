@@ -65,9 +65,9 @@ def droid_turn(droid: SpheroEduAPI, droid_history: ActionHistory):
             sleep(2)
             exit()
         
-    else:
-        print("No mistake yet!")
-        sendResponse("OK")
+
+    print("No mistake yet!")
+    sendResponse("OK")
 
 
 human_actions = {
@@ -137,6 +137,8 @@ def simon_robot(droid: SpheroEduAPI):
     # Initializing animation
     register_all_anims(droid)
 
+    sendResponse("game")
+
     droid_history = ActionHistory()
 
     while(True):
@@ -148,6 +150,8 @@ def simon_human(droid: SpheroEduAPI):
     Simon game, where only the human plays.
     """
     register_all_anims(droid)
+
+    sendResponse("game")
 
     human_history = ActionHistory()
 

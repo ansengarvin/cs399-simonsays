@@ -40,58 +40,92 @@ export function SpheroSimonLanding(props) {
     )
     
 }
- 
-export function SpheroSimonRobot(props) {
-    const [command, setCommand] = useState(32)
-    const {state, formData} = useNavigation()
+
+function SpheroConnect(props) {
+    const {setStarted, type, title} = props
     const response = useActionData()
+    if (response != undefined && response.reply == "game") {
+        setStarted(true)
+    }
     return (
         <div className="content">
             <div className = "title">
                 <div className = "caption">
-                    Welcome to Sphero Simon!
+                    {title}
                 </div>
                 <div className = "explanation">
-                    Choose a color and make the robot GO!
+                    Press the below button to connect to the sphero.
                 </div>
             </div>
-            <div className = "buttons">
-                {command == 1
-                ? <button className="command red selected"/>
-                : <button className="command red" onClick={() =>{setCommand(1)}}/>
-                }
-                {command == 2
-                ? <button className="command green selected"/>
-                : <button className="command green" onClick={() =>{setCommand(2)}}/>
-                }
-                {command == 3
-                ? <button className="command blue selected"/>
-                : <button className="command blue" onClick={() =>{setCommand(3)}}/>
-                }
-                {command == 4
-                ? <button className="command orange selected"/>
-                : <button className="command orange" onClick={() =>{setCommand(4)}}/>
-                }
-                {command == 5
-                ? <button className="command purple selected"/>
-                : <button className="command purple" onClick={() =>{setCommand(5)}}/>
-                }
-            </div>
             <Form method="POST">
-                <input type="hidden" name="command" value={command}/>
-                <button className="submit">GO</button>
+                <input type="hidden" name="command" value={type}/>
+                <button className="submit">Connect</button>
             </Form>
-            <div className = "spacer"/>
-            {state == "submitting"
-            ? <div className = "robocheck">Watch the Robot Go!</div>
-            : <></>
-            }
-            {state == "idle" && response != undefined && response.reply == "Mistake"
-            ? <div className = "robocheck">Robot made a mistake! Uh-oh!</div> 
-            : <></>
-            }
-            
         </div>
+    ) 
+}
+ 
+export function SpheroSimonRobot(props) {
+    const {title, setGameState} = props
+    const [command, setCommand] = useState(32)
+    const {state, formData} = useNavigation()
+    const response = useActionData()
+    const [started, setStarted] = useState(false)
+    return (
+        <>
+            {started == false
+            ? <SpheroConnect 
+                setStarted={setStarted}
+                type="1"
+                title="Welcome to Sphero Simon: Robot Edition!"
+            />
+            : <div className="content">
+                <div className = "title">
+                    <div className = "caption">
+                        {title}
+                    </div>
+                    <div className = "explanation">
+                        Choose a color and make the robot GO!
+                    </div>
+                </div>
+                <div className = "buttons">
+                    {command == 1
+                    ? <button className="command red selected"/>
+                    : <button className="command red" onClick={() =>{setCommand(1)}}/>
+                    }
+                    {command == 2
+                    ? <button className="command green selected"/>
+                    : <button className="command green" onClick={() =>{setCommand(2)}}/>
+                    }
+                    {command == 3
+                    ? <button className="command blue selected"/>
+                    : <button className="command blue" onClick={() =>{setCommand(3)}}/>
+                    }
+                    {command == 4
+                    ? <button className="command orange selected"/>
+                    : <button className="command orange" onClick={() =>{setCommand(4)}}/>
+                    }
+                    {command == 5
+                    ? <button className="command purple selected"/>
+                    : <button className="command purple" onClick={() =>{setCommand(5)}}/>
+                    }
+                </div>
+                <Form method="POST">
+                    <input type="hidden" name="command" value={command}/>
+                    <button className="submit">GO</button>
+                </Form>
+                <div className = "spacer"/>
+                {state == "submitting"
+                ? <div className = "robocheck">Watch the Robot Go!</div>
+                : <></>
+                }
+                {state == "idle" && response != undefined && response.reply == "Mistake"
+                ? <div className = "robocheck">Robot made a mistake! You win!</div> 
+                : <></>
+                }
+                
+            </div>}
+        </>
     )
 }
 
@@ -154,6 +188,7 @@ function HumanStatus(props) {
 }
 
 export function SpheroSimonHuman(props) {
+    const {title, setGameState} = props
     const [command, setCommand] = useState(32)
     const [started, setStarted] = useState(false)
     const {state, formData} = useNavigation()
@@ -162,7 +197,7 @@ export function SpheroSimonHuman(props) {
         <div className="content">
             <div className = "title">
                 <div className = "caption">
-                    Welcome to Sphero Simon: Human Edition!
+                    {title}
                 </div>
                 <div className = "explanation">
                     The Robot will tell you what to do below.
@@ -184,11 +219,22 @@ export function SpheroSimonHuman(props) {
     )
 }
 
+
 export function SpheroSimonVersus(props) {
-    return (
-        <>
-        Versus
-        </>
-    )
+    const [gameState, setGameState] = useState(0)
+    if (gameState == 0) {
+        return (
+            <button onClick={()=>{setGameState(1)}}>Start</button>
+        )
+    } else if (gameState == 1) {
+        return (
+            <SpheroSimonRobot title="Robot's Turn!"/>
+        )
+    } else if (gameState == 2) {
+        return (
+            <SpheroSimonHuman title="Your Turn!"/>
+        )
+    }
+    
 }
 

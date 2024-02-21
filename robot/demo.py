@@ -11,6 +11,8 @@ from spherov2.sphero_edu import EventType
 from anims.anims import *
 from games.simon import simon_robot, simon_human
 from lib.commands import do_nothing
+from lib.gametype import GameType
+from lib.pipeline import getGame
 
 # Returns true if the droid's vertical acceleration is 0 (e.g. if the )
 def is_dropped(droid: SpheroEduAPI):
@@ -18,13 +20,26 @@ def is_dropped(droid: SpheroEduAPI):
         return True
     else:
         return False
+
     
 if __name__ == "__main__":
     print("Finding Sphero.")
     toy = scanner.find_toy()
+    print("Toy found.")
     cmd = None
     mistake = 0
+    print("Getting game type.")
+    game_type = GameType()
+    getGame(game_type)
+    print("Game type is", game_type.get_game())
     with SpheroEduAPI(toy) as droid:
         droid.register_event(EventType.on_collision, do_nothing)
-        #simon_robot(droid)
-        simon_human(droid)
+        game = game_type.get_game()
+        if (game == "1"):
+            simon_robot(droid)
+        elif (game == "2"):
+            simon_human(droid)
+        elif (game == "3"):
+            print("Verus")
+        else:
+            print("Bug detected.")

@@ -12,6 +12,10 @@ import {
 } from './components/content/simon'
 import './index.css'
 
+function doNothing(input){
+    console.log("Doing nothing.")
+    return
+}
 
 const router = createBrowserRouter([
     {
@@ -26,12 +30,12 @@ const router = createBrowserRouter([
                     { index: true, element: <SpheroSimonLanding/>},
                     { 
                         path: "robot",
-                        element: <SpheroSimonRobot/>,
+                        element: <SpheroSimonRobot title="Welcome to Sphero Simon: Robot Edition!" setGameState={doNothing}/>,
                         action: postAction
                     },
                     {
                         path: "human",
-                        element: <SpheroSimonHuman/>,
+                        element: <SpheroSimonHuman title="Welcome to Sphero Simon: Human Edition!" setGameState={doNothing}/>,
                         action: postAction
                     },
                     {
