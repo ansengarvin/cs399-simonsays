@@ -13,7 +13,7 @@ export function Leftbar() {
     return (
         <nav className="leftbar">
             {Object.keys(navlinks).map(key=>(
-                <NavLink to={navlinks[key]} className="item">
+                <NavLink key={key} to={navlinks[key]} className="item">
                     {key}
                 </NavLink>
             ))}
