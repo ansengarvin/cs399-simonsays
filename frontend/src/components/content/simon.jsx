@@ -10,7 +10,7 @@ import "./content.css"
 
 
 function doNothing(input){
-    console.log("Doing nothing.")
+    console.log("Doing nothing, but here's the input: " + input)
     return
 }
 
@@ -32,7 +32,6 @@ export function SpheroSimonLanding(props) {
     const {setMode} = props
     return (
         <div className="content">
-
             <div className = "title">
                 <div className = "caption">
                     Choose a game!
@@ -51,6 +50,7 @@ export function SpheroSimonLanding(props) {
 
 function SpheroConnect(props) {
     const {setStarted, type, title} = props
+    const {state, formData} = useNavigation()
     const response = useActionData()
     if (response != undefined && response.reply == "game") {
         setStarted(true)
@@ -67,7 +67,11 @@ function SpheroConnect(props) {
             </div>
             <Form method="POST">
                 <input type="hidden" name="command" value={type}/>
-                <button className="submit">Connect</button>
+                {state == "idle"
+                    ? <button className="submit">Connect</button>
+                    : <div className="robocheck">Connecting</div>
+                }
+                
             </Form>
         </div>
     ) 
@@ -81,6 +85,9 @@ function RobotCard(props) {
     const {state, formData} = useNavigation()
     const response = useActionData()
     const [command, setCommand] = useState(32)
+    if (response != undefined && response.reply == "OK"){
+        setGameState("human")
+    }
     return (
         <div className="content">
             <div className = "title">
@@ -158,7 +165,7 @@ const commands = {
 }
 
 function HumanStatus(props) {
-    const {state, command, response} = props
+    const {state, command, response, round, setGameState} = props
     if (state == "idle") {
         if (response == undefined) {
             return(
@@ -168,12 +175,14 @@ function HumanStatus(props) {
             )
         }  
         else if (response.reply == "success") {
+            setGameState(response.reply)
             return (
                 <>
                     You have won the game!
                 </>
             )
         } else if (response.reply == "failure") {
+            setGameState(response.reply)
             return (
                 <>
                     Oh no! You lost the game!
@@ -187,11 +196,12 @@ function HumanStatus(props) {
                 </>
             )
 
-        }else {   
+        }else {
+            setGameState("robot")
             return (
                 <>
-                    Congratulations! You finished round {response.reply}<br/>
-                    Press "Ready" to continue to round {parseInt(response.reply) + 1}!
+                    Congratulations! You finished round {round}<br/>
+                    Press "Ready" to continue to round {round + 1}!
                 </>
             )
         }
@@ -214,8 +224,9 @@ function HumanStatus(props) {
 function HumanCard(props) {
     const {
         title, setGameState,
-        command, setCommand,
+        round, setRound
     } = props
+    const [command, setCommand] = useState(32)
     const {state, formData} = useNavigation()
     const response = useActionData()
     return (
@@ -231,23 +242,32 @@ function HumanCard(props) {
                 </div>
             </div>
             <div className = "robocheck_human">
-                <HumanStatus command={command} state={state} response={response}/>
+                <HumanStatus
+                    command={command}
+                    state={state}
+                    response={response}
+                    setGameState={setGameState}
+                    round={round}
+                />
             </div>
             <Form method="POST">
                 <input type="hidden" name="command" value={command}/>
                 <button className="submit" onClick={()=>{
                     setCommand( Math.floor(Math.random()*3)+1 )
-                    setStarted(true)
+                    setRound(prevRound => {
+                        return prevRound + 1
+                    })
                 }}>Ready!</button>
             </Form>
         </div>
     ) 
 }
 
+
 export function SpheroSimonHuman(props) {
     const title = "Welcome to Sphero Simon: Human Edition!"
-    const [command, setCommand] = useState(32)
     const [started, setStarted] = useState(false)
+    const [round, setRound] = useState(0)
     if (started == false) {
         return (
             <SpheroConnect 
@@ -261,8 +281,8 @@ export function SpheroSimonHuman(props) {
             <HumanCard
                 title={title}
                 setGameState={doNothing}
-                command={command}
-                setCommand={setCommand}
+                round={round}
+                setRound={setRound}
             />
         )
     }
@@ -271,29 +291,46 @@ export function SpheroSimonHuman(props) {
 
 export function SpheroSimonVersus(props) {
     const [started, setStarted] = useState(false)
-    const [gameState, setGameState] = useState(1)
-
+    const [gameState, setGameState] = useState("human")
+    const [round, setRound] = useState(1)
     if (started == false) {
         return (
             <SpheroConnect 
+                title="Welcome to Sphero Simon: Versus Edition!"
                 setStarted={setStarted}
-                type="2"
-                title="Welcome to Sphero Simon: Human Edition!"
+                type="2"   
             />
         )
-    } else if (gameState == 1) {
+    } else if (gameState == "robot") {
         return (
-            <>
-                Robot Turn
-            </>
+            <RobotCard
+                title="Sphero Simon Versus: Robot Turn"
+                setGameState={setGameState}
+            />
         )
-    } else if (gameState == 2) {
+    } else if (gameState == "human") {
+        return(
+            <HumanCard
+                title="Sphero Simon Versus: Human Turn"
+                setGameState={doNothing}
+                round={round}
+                setRound={setRound}
+            />
+        )
+    } else if (gameState == "success") {
         return(
             <>
-                Human Turn
-            </> 
+                VICTORY!
+            </>
         )
-    } else {
+    } else if (gameState == "failure") {
+        return(
+            <>
+                DEFEAT!
+            </>
+        )
+    }
+    else {
         return (
             <>
                 Uh oh! We have a bug!
