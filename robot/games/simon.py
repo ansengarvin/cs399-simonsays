@@ -107,7 +107,6 @@ def human_turn(droid: SpheroEduAPI, human_history: ActionHistory):
     droid.play_matrix_animation(6)
     getAction(human_history)
     print("New action is", human_action_names[human_history.get_recent_action()])
-    sleep(2)
 
     actions_list = human_history.get_actions()
     for i in range(human_history.get_count()):
@@ -158,10 +157,13 @@ def simon_human(droid: SpheroEduAPI):
 
     human_history = ActionHistory()
 
-    for i in range(9):
+    for i in range(3):
         result = human_turn(droid, human_history)
         if result == "Failure":
+            sendResponse("failure")
             return
+        elif i != 2:
+            sendResponse("OK")
     sendResponse("success")
 
 def simon_versus(droid: SpheroEduAPI):

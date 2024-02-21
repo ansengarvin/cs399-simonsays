@@ -257,11 +257,11 @@ function HumanCard(props) {
                     {title}
                 </div>
                 <div className = "explanation">
-                    The Robot will tell you what to do below.
-                    Do all of its previous commands in order, then do the new one.<br/>
+                    The Robot will tell you what to do below.<br/>
+                    Do all of its previous commands in order, then do the new one.
                     {
                     explanationType == 1
-                        ? <>If you make it to 9, you win!</>
+                        ? <>If you make it to 3, you win!</>
                         : <>If you go for longer than the robot, you win!
                             But if it goes to 3, it's a tie!</>
                     }
@@ -320,7 +320,7 @@ export function SpheroSimonHuman(props) {
 export function SpheroSimonVersus(props) {
     const [started, setStarted] = useState(false)
     const [gameState, setGameState] = useState("human")
-    const [round, setRound] = useState(1)
+    const [round, setRound] = useState(0)
     
     if (started == false) {
         return (
