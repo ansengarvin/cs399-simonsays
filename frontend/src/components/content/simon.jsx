@@ -88,7 +88,7 @@ function RobotCard(props) {
     if (response != undefined && response.reply == "OK"){
         setGameState("human")
     } else if (response != undefined && response.reply == "Mistake") {
-        setGameState("failure")
+        setGameState("success")
     }
     return (
         <div className="content">
@@ -167,7 +167,10 @@ const commands = {
 }
 
 function HumanStatus(props) {
-    const {state, command, response, round, setGameState} = props
+    const {state, command, response, round, setGameState, gameState} = props
+    if (response != undefined) {
+        console.log(response.reply)
+    }
     if (state == "idle") {
         if (response == undefined) {
             return(
@@ -177,14 +180,14 @@ function HumanStatus(props) {
             )
         }  
         else if (response.reply == "success") {
-            setGameState(response.reply)
+            setGameState("success")
             return (
                 <>
                     You have won the game!
                 </>
             )
         } else if (response.reply == "failure") {
-            setGameState(response.reply)
+            setGameState("failure")
             return (
                 <>
                     Oh no! You lost the game!
@@ -197,8 +200,18 @@ function HumanStatus(props) {
                     Press "Ready" to start!
                 </>
             )
-
-        }else {
+        } else if (response.reply == "OK") {
+            /* This is the response that is received when the robot successfuly completes its turn.
+            We don't want immediately re-set the game state back to robot after this, because it
+            creates an infinite loop. */
+            console.log("Human Game State")
+            return (
+                <>
+                Congratulations! You finished round {round}<br/>
+                Press "Ready" to continue to round {round + 1}!
+                </>
+            ) 
+        } else {
             setGameState("robot")
             return (
                 <>
@@ -225,12 +238,14 @@ function HumanStatus(props) {
 
 function HumanCard(props) {
     const {
-        title, setGameState,
+        title, 
+        gameState, setGameState,
         round, setRound
     } = props
     const [command, setCommand] = useState(32)
     const {state, formData} = useNavigation()
     const response = useActionData()
+    console.log("In Human: Gamestate:", gameState)
     return (
         <div className="content">
             <div className = "title">
@@ -250,6 +265,7 @@ function HumanCard(props) {
                     response={response}
                     setGameState={setGameState}
                     round={round}
+                    gameState={gameState}
                 />
             </div>
             <Form method="POST">
@@ -295,6 +311,7 @@ export function SpheroSimonVersus(props) {
     const [started, setStarted] = useState(false)
     const [gameState, setGameState] = useState("human")
     const [round, setRound] = useState(1)
+    
     if (started == false) {
         return (
             <SpheroConnect 
@@ -317,6 +334,7 @@ export function SpheroSimonVersus(props) {
                 setGameState={setGameState}
                 round={round}
                 setRound={setRound}
+                gameState={gameState}
             />
         )
     } else if (gameState == "success") {

@@ -176,7 +176,7 @@ def simon_versus(droid: SpheroEduAPI):
     droid_history = ActionHistory()
     human_history = ActionHistory()
     
-    for i in range(9):
+    for i in range(3):
         human_result = human_turn(droid, human_history)
         if human_result == "Failure":
             return
