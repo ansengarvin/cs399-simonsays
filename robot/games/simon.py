@@ -61,14 +61,12 @@ def droid_turn(droid: SpheroEduAPI, droid_history: ActionHistory):
         if mistake == 1:
             print("Uh oh! We made a mistake!")
             droid.play_matrix_animation(7)
-            sendResponse("Mistake")
             sleep(2)
             return "Mistake"
         
 
     print("No mistake yet!")
-    sendResponse("OK")
-    return "Success"
+    return "OK"
 
 
 human_actions = {
@@ -145,6 +143,7 @@ def simon_robot(droid: SpheroEduAPI):
 
     while(True):
         result = droid_turn(droid, droid_history)
+        sendResponse(result)
         if result == "Mistake":
             exit()
 
@@ -175,13 +174,20 @@ def simon_versus(droid: SpheroEduAPI):
 
     droid_history = ActionHistory()
     human_history = ActionHistory()
+
+    MAX_ROUNDS = 3
     
-    for i in range(3):
+    for i in range(MAX_ROUNDS):
         human_result = human_turn(droid, human_history)
         if human_result == "Failure":
             return
         sendResponse(str(i+1))
         droid_result = droid_turn(droid, droid_history)
         if droid_result == "Mistake":
+            sendResponse("Mistake")
             return
-
+        if droid_result == "OK":
+            if i == MAX_ROUNDS - 1:
+                sendResponse("OK")
+            else:
+                sendResponse("Tie")

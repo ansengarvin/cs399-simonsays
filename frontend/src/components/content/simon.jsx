@@ -133,7 +133,7 @@ function RobotCard(props) {
             : <></>
             }
             {state == "idle" && response != undefined && response.reply == "Mistake"
-            ? <div className = "robocheck">Robot made a mistake! You win!</div> 
+            ? <div className = "robocheck">Robot made a mistake! They lose!</div> 
             : <></>
             }
         </div>
