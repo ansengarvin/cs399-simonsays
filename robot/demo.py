@@ -34,6 +34,7 @@ if __name__ == "__main__":
     print("Game type is", game_type.get_game())
     with SpheroEduAPI(toy) as droid:
         droid.register_event(EventType.on_collision, do_nothing)
+        
         game = game_type.get_game()
         if (game == "1"):
             simon_robot(droid)

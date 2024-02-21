@@ -188,6 +188,6 @@ def simon_versus(droid: SpheroEduAPI):
             return
         if droid_result == "OK":
             if i == MAX_ROUNDS - 1:
-                sendResponse("OK")
+                sendResponse("Tie")    
             else:
-                sendResponse("Tie")
+                sendResponse("OK")

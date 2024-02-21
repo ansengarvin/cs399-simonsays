@@ -90,6 +90,8 @@ function RobotCard(props) {
         setGameState("human")
     } else if (response != undefined && response.reply == "Mistake") {
         setGameState("success")
+    } else if (response != undefined && response.reply == "Tie") {
+        setGameState("tie")
     }
     return (
         <div className="content">
@@ -261,7 +263,7 @@ function HumanCard(props) {
                     explanationType == 1
                         ? <>If you make it to 9, you win!</>
                         : <>If you go for longer than the robot, you win!
-                            But if it goes to 9, it's a tie!</>
+                            But if it goes to 3, it's a tie!</>
                     }
                     
                 </div>
@@ -315,7 +317,6 @@ export function SpheroSimonHuman(props) {
     }
 }
 
-
 export function SpheroSimonVersus(props) {
     const [started, setStarted] = useState(false)
     const [gameState, setGameState] = useState("human")
@@ -349,18 +350,29 @@ export function SpheroSimonVersus(props) {
         )
     } else if (gameState == "success") {
         return(
-            <>
-                VICTORY!
-            </>
+            <div className="content green">
+                <div className = "victory_title">
+                    You Win!
+                </div>
+            </div>
         )
     } else if (gameState == "failure") {
         return(
-            <>
-                DEFEAT!
-            </>
+            <div className="content red">
+                <div className = "victory_title">
+                    You Lose!
+                </div>
+            </div>
         )
-    }
-    else {
+    } else if (gameState == "tie") {
+        return (
+            <div className="content orange">
+                <div className = "victory_title">
+                    It's a tie!
+                </div>
+            </div>
+        )   
+    } else {
         return (
             <>
                 Uh oh! We have a bug!
