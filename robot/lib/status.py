@@ -30,7 +30,10 @@ def is_falling(droid: SpheroEduAPI):
 
 
 def is_spinning(droid: SpheroEduAPI):
-    if droid.get_gyroscope()['z'] > 1000:
+    if (
+        droid.get_gyroscope()['z'] >= 1000 or
+        droid.get_gyroscope()['z'] <= -1000
+        ):
         return True
     else:
         return False
