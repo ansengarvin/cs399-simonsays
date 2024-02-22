@@ -102,7 +102,7 @@ def check_correct_action(droid: SpheroEduAPI, command: str):
 
 
 def human_turn(droid: SpheroEduAPI, human_history: ActionHistory):
-    droid.set_matrix_rotation(FrameRotationOptions.ROTATE_90_DEGREES)
+    droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
     droid.set_stabilization(False)
     droid.play_matrix_animation(6)
     getAction(human_history)
