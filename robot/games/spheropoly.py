@@ -1,30 +1,11 @@
 ﻿from spherov2.sphero_edu import SpheroEduAPI
 from lib.status import not_moving
+from lib.pipeline import getBoard
+from lib.droidState import DroidState
+from lib.board import Board
 
 
 SPEED = 35
-
-
-class droidState:
-    def __init__(self):
-        self.heading = 0
-        self.pos = 0
-
-    def set_heading_left(self):
-        self.heading = (self.heading - 90) % 360
-
-    def set_heading_right(self):
-        self.heading = (self.heading + 90) % 360
-
-    def set_position(self, pos):
-        self.pos = pos
-
-    def get_heading(self):
-        return self.heading
-    
-    def get_position(self):
-        return self.pos
-        
 
 def roll_until_collision(droid: SpheroEduAPI, heading):
     """
@@ -36,17 +17,17 @@ def roll_until_collision(droid: SpheroEduAPI, heading):
             return
 
 
-def left(droid: SpheroEduAPI, state: droidState):
+def left(droid: SpheroEduAPI, state: DroidState):
     state.set_heading_left()
     roll_until_collision(droid, state.get_heading())
 
 
-def right(droid: SpheroEduAPI, state: droidState):
+def right(droid: SpheroEduAPI, state: DroidState):
     state.set_heading_right()
     roll_until_collision(droid, state.get_heading())
 
 
-def jail(droid: SpheroEduAPI, state: droidState):
+def jail(droid: SpheroEduAPI, state: DroidState):
     print("Jail")
 
 def get_roll():
@@ -71,8 +52,13 @@ map_instructions = [
 
 def spheropoly(droid: SpheroEduAPI):
     print("Welcome to Spheropoly!")
-    state = droidState()
+    state = DroidState()
+    boardState = Board()
     while True:
+        getBoard(boardState)
+        print(boardState.board)
+
+        """
         roll = get_roll()
         if roll == 'x':
             exit()
@@ -83,3 +69,4 @@ def spheropoly(droid: SpheroEduAPI):
                 print("At square ", i)
                 map_instructions[current_square](droid, state)
             state.set_position((state.get_position() + roll) % 12)
+        """

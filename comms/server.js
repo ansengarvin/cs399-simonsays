@@ -49,6 +49,34 @@ function commandSphero(msg, complete) {
     });
 }
 
+function sendJSON(msg, complete) {
+    var amqp = require('amqplib/callback_api');
+    amqp.connect('amqp://localhost', function(error0, connection) {
+        if (error0) {
+            throw error0;
+        }
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            var query_queue = 'command';
+
+            channel.assertQueue(query_queue, {
+                durable: false
+            });
+
+            channel.sendToQueue(query_queue, Buffer.from(JSON.stringify(msg)));
+
+            console.log(" [x] Sent %s", msg);
+            complete("AB")
+        });
+        setTimeout(function() {
+            connection.close();
+        }, 500);
+    });
+}
+
 function awaitReply(complete) {
     console.log("entering function")
     var amqp = require('amqplib/callback_api');
@@ -82,6 +110,9 @@ function awaitReply(complete) {
         });
     });
 }
+
+app.set("command", sendJSON)
+app.set("awaitReply", awaitReply)
 
 /*
 Command function for Sphero Simon

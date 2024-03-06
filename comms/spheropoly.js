@@ -176,8 +176,8 @@ class Spheropoly {
 
 const spheropoly = new Spheropoly()
 
-function roboTurn() {
-
+function roboTurn(command, receive, complete) {
+    command(spheropoly.state, complete)
 }
 
 router.post('/', function(req, res, next){
@@ -208,8 +208,12 @@ router.post('/roll', function(req, res, next){
 })
 
 router.post('/buy', function(req, res, next) {
-   spheropoly.buy()
-   res.status(201).send(spheropoly.state)
+    spheropoly.buy()
+    roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    function complete(msg) {
+        console.log(msg)
+    }
+    res.status(201).send(spheropoly.state)
 })
 
 router.post('/auction', function(req, res, next){
