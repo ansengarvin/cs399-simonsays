@@ -5,6 +5,7 @@ import { Topbar } from './components/topbar/topbar'
 import { Leftbar } from './components/leftbar/leftbar'
 import { Rightbar } from './components/rightbar/rightbar'
 import { Home } from './components/content/home'
+import { Spheropoly } from './components/content/spheropoly'
 import { SpheroSimonLanding, SpheroSimonHuman, SpheroSimonRobot, SpheroSimonVersus } from './components/content/simon'
 
 export function Root(props) {
@@ -25,5 +26,6 @@ export {
     SpheroSimonLanding,
     SpheroSimonHuman,
     SpheroSimonRobot,
-    SpheroSimonVersus
+    SpheroSimonVersus,
+    Spheropoly
 }

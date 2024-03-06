@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 
-import { Root, Home } from "./Routes"
+import { Root, Home, Spheropoly } from "./Routes"
 import { 
     SpheroSimonLanding,
     SpheroSimonHuman,
@@ -39,7 +39,10 @@ const router = createBrowserRouter([
                         action: postAction
                     }
                 ]
-                
+            },
+            {
+                path: "spheropoly",
+                element: <Spheropoly/>
             }
         ]
     }

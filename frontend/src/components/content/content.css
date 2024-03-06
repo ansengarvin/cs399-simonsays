@@ -92,12 +92,14 @@ button {
 .red{
     background-color: rgb(255, 94, 94);
     border-color: rgb(148, 51, 51);
+    color: rgb(148, 51, 51);
     border-style: solid;
 }
 
 .green{
     background-color: rgb(124, 255, 94);
     border-color: rgb(51, 148, 72);
+    color: rgb(51, 148, 72);
     border-style: solid;
 }
 
