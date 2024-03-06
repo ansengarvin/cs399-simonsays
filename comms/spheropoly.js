@@ -139,7 +139,8 @@ class Spheropoly {
         this._robot.reset()
     }
 
-    hasAuctioned() {
+    // Checks if there is a tile availalbe for auction currently.
+    hasAuction() {
         if (this._auctionTile) {
             return true
         } else {
@@ -147,6 +148,7 @@ class Spheropoly {
         }
     }
 
+    // Checks if the human can buy the tile they're standing on.
     canBuy() {
         if (this._human.funds >= this.board[this._human.position].cost) {
             return true
@@ -155,30 +157,91 @@ class Spheropoly {
         }
     }
 
+    // Human player buys the tile they're standing on.
     buy() {
         this._board[this._human.position].owner = 1
         this._human.takeMoney(this._board[this._human.position].cost)
     }
 
+    // Human player sends the tile they're standing on to auction.
     auction(){
         this._auctionTile = this._human.position
     }
 
+    // Move the human along the board.
     moveHuman(roll) {
         this._human.position = (this._human.position + roll) % 12
         console.log(this._human.position)
     }
 
+    // Move the robot along the board.
     moveRobot(roll) {
         this._robot.position = (this._robot.position + roll) % 12
+    }
+
+    // Checks if there's a property on auction for the robot to buy, and buys it if there is.
+    roboAuction() {
+        if (this._auctionTile) {
+            if (this._robot.funds >= this.board[this._auctionTile].cost) {
+                this._robot.funds -= this.board[this._auctionTile].cost
+                this.board[this._auctionTile].owner = 2
+                this._auctionTile = null
+                return 1
+            } else {
+                console.log("Robot cannot afford to buy the auctioned property.")
+                this._auctionTile = null
+                return -1
+            }
+        } else {
+            console.log("No auctioned property for the robot to consider.")
+            return 0
+        }
+    }
+
+    // Checks who owns the tile the robot is standing on, and takes action accordingly.
+    roboTile() {
+        console.log(this._board[this._robot.position])
+        const currentTile = this._board[this._robot.position]
+
+        switch (currentTile.owner) {
+            case 0: // Owned by nobody. The robot wants to buy it.
+                if (this._robot.funds >= currentTile.cost) {
+                    this._robot.takeMoney(currentTile.cost)
+                    currentTile.owner = 2
+                } else {
+                    console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
+                    this._auctionTile = this._robot.position
+                }
+
+            case 1: // Owned by the player. The robot must give them money or lose.
+                if (this._robot.funds >= currentTile.cost) {
+                    this._robot.takeMoney(currentTile.cost)
+                    this._human.giveMoney(currentTile.cost)
+                } else {
+                    console.log("The robot lost the game! TODO: Actually end the game here.")
+                }
+            
+            case 2:
+                console.log("The robot landed on its own tile! TODO: Communicate this to the player.")
+        }
+    }
+
+    // The robot's turn.
+    roboTurn(command, receive, complete) {
+        var roll = Math.floor(Math.random() * 12)
+        this.moveRobot(roll)
+        this.roboAuction()
+        this.roboTile()
+        const orders = {
+            "roll": roll,
+            "position": this._robot.position
+        }
+        command(spheropoly.state, complete)
+        receive(complete)
     }
 }
 
 const spheropoly = new Spheropoly()
-
-function roboTurn(command, receive, complete) {
-    command(spheropoly.state, complete)
-}
 
 router.post('/', function(req, res, next){
     console.log("  -- req.body:", req.body)
@@ -208,12 +271,18 @@ router.post('/roll', function(req, res, next){
 })
 
 router.post('/buy', function(req, res, next) {
+    var callbackCount = 0
     spheropoly.buy()
-    roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+
+    if (callbackCount >= 2) {
+        res.status(201).send(spheropoly.state)
+    }
+
     function complete(msg) {
+        callbackCount += 1
         console.log(msg)
     }
-    res.status(201).send(spheropoly.state)
 })
 
 router.post('/auction', function(req, res, next){

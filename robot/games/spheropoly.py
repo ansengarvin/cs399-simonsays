@@ -2,7 +2,7 @@
 from lib.status import not_moving
 from lib.pipeline import getBoard
 from lib.droidState import DroidState
-from lib.board import Board
+from lib.commandHelper import CommandHelper
 
 
 SPEED = 35
@@ -53,7 +53,7 @@ map_instructions = [
 def spheropoly(droid: SpheroEduAPI):
     print("Welcome to Spheropoly!")
     state = DroidState()
-    boardState = Board()
+    commandHelper = CommandHelper()
     while True:
         getBoard(boardState)
         print(boardState.board)

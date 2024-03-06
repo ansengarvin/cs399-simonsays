@@ -1,7 +1,7 @@
 ﻿import pika
 import json
 from lib.actionhistory import ActionHistory
-from lib.board import Board
+from lib.commandHelper import CommandHelper
 from lib.gametype import GameType
 
 """
@@ -53,7 +53,7 @@ def getSimonAction(hist: ActionHistory):
     channel.start_consuming()
 
 
-def getBoard(board: Board):
+def getBoard(commandHelper: CommandHelper):
     print("Opening command server")
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
