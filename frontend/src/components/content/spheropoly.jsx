@@ -2,14 +2,13 @@
 import {Form, useActionData, useNavigation, NavLink} from 'react-router-dom'
 
 import {useQuery} from '@tanstack/react-query'
+import { css } from '@emotion/react'
+import { Board } from './spheropolyBoard'
 
 export function GameContainer() {
     
 }
 
-function Tile(props) {
-    const {owner, name, cost} = props
-}
 
 export function Spheropoly() {
     const query="roll"
@@ -23,17 +22,22 @@ export function Spheropoly() {
     })
     return (
         <div className="content">
-            <div className = "title">
-                <div className = "caption">
-                    Your turn!
+            <div className="columns">
+                <div className = "controls">
+                    <div className = "caption">
+                        Your turn!
+                    </div>
+                    <div className = "explanation">
+                            Press the button to roll.
+                    </div>
+                    <button className="submit"onClick={() => {
+                        setRoll(true)
+                    }}>Roll</button>
                 </div>
-                <div className = "explanation">
-                        Press the button to roll.
+                <div>
+                    <Board data={data}/>
                 </div>
-                <button className="submit"onClick={() => {
-                    setRoll(true)
-                }}>Roll</button>
-                {data.board["1"].owner}
+                
             </div>
         </div>
     ) 

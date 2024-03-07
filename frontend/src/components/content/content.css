@@ -21,6 +21,11 @@
     padding: 40px;
 }
 
+.columns {
+    display: flex;
+    flex-direction: row;
+}
+
 .title{
     display: flex;
     flex-direction: column;
@@ -30,6 +35,17 @@
     height: 100px;
     color: rgb(236, 236, 236);
     border-radius: 30px;
+}
+
+.controls{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: rgb(236, 236, 236);
+    border-radius: 30px;
+    margin-bottom: auto;
+    padding: 100px;
 }
 
 .title .caption{
