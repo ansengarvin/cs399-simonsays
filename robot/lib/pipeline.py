@@ -53,7 +53,7 @@ def getSimonAction(hist: ActionHistory):
     channel.start_consuming()
 
 
-def getBoard(commandHelper: CommandHelper):
+def getCommand(commandHelper: CommandHelper):
     print("Opening command server")
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
@@ -63,7 +63,7 @@ def getBoard(commandHelper: CommandHelper):
     def callback(ch, method, properties, body):
         print("Received. Returning the following:")
         print(json.loads(body.decode()))
-        board.set_board(json.loads(body.decode()))
+        commandHelper.set_command(json.loads(body.decode()))
         channel.close()
 
     channel.basic_consume(queue='command', on_message_callback=callback, auto_ack=True)

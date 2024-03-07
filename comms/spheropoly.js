@@ -236,7 +236,7 @@ class Spheropoly {
             "roll": roll,
             "position": this._robot.position
         }
-        command(spheropoly.state, complete)
+        command(orders, complete)
         receive(complete)
     }
 }
@@ -275,13 +275,12 @@ router.post('/buy', function(req, res, next) {
     spheropoly.buy()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
 
-    if (callbackCount >= 2) {
-        res.status(201).send(spheropoly.state)
-    }
-
     function complete(msg) {
-        callbackCount += 1
-        console.log(msg)
+        callbackCount ++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
     }
 })
 

@@ -1,6 +1,6 @@
 ﻿from spherov2.sphero_edu import SpheroEduAPI
 from lib.status import not_moving
-from lib.pipeline import getBoard
+from lib.pipeline import getCommand, sendResponse
 from lib.droidState import DroidState
 from lib.commandHelper import CommandHelper
 
@@ -55,8 +55,12 @@ def spheropoly(droid: SpheroEduAPI):
     state = DroidState()
     commandHelper = CommandHelper()
     while True:
-        getBoard(boardState)
-        print(boardState.board)
+
+        getCommand(commandHelper)
+        print(commandHelper.command)
+        sendResponse("Done")
+
+
 
         """
         roll = get_roll()

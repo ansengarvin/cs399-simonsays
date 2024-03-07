@@ -69,7 +69,7 @@ function sendJSON(msg, complete) {
             channel.sendToQueue(query_queue, Buffer.from(JSON.stringify(msg)));
 
             console.log(" [x] Sent %s", msg);
-            complete("AB")
+            complete("JSON Sent.")
         });
         setTimeout(function() {
             connection.close();
