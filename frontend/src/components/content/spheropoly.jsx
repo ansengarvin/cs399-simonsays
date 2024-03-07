@@ -7,6 +7,10 @@ export function GameContainer() {
     
 }
 
+function Tile(props) {
+    const {owner, name, cost} = props
+}
+
 export function Spheropoly() {
     const query="roll"
     const {isLoading, error, data} = useQuery({
