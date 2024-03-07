@@ -3,4 +3,4 @@
         self.command = None
 
     def set_command(self, command):
-        self.CommandHelper = command
+        self.command = command

@@ -5,11 +5,10 @@ const router = Router()
 module.exports = router
 
 class Tile {
-    constructor(name, cost, type) {
+    constructor(name, cost) {
         this._owner = 0,
         this._name = name,
-        this._cost = cost,
-        this._type = type
+        this._cost = cost
     }
 
     get tile() {
@@ -76,29 +75,28 @@ class Player {
 class Spheropoly {
     constructor () {
         this._board = [
-            new Tile("Tile 1", 50),
+            new Tile("Go", null),
             new Tile("Tile 2", 75),
             new Tile("Tile 3", 100),
             new Tile("Tile 4", 125),
             new Tile("Tile 5", 150),
-            new Tile("Tile 6", 175),
+            new Tile("Jail", null),
             new Tile("Tile 7", 200),
             new Tile("Tile 8", 225),
-            new Tile("Tile 9", 250),
+            new Tile("Wild", null),
             new Tile("Tile 10", 275),
             new Tile("Tile 11", 300),
             new Tile("Tile 12", 400)
         ]
-
         this._robot = new Player("robot")
         this._human = new Player("human")
         this._auctionTile = null
     }
 
     get board() {
-        const board_tiles = []
+        const board_tiles = {}
         for (let i = 0; i < this._board.length; i++) {
-            board_tiles.push(this._board[i].tile)
+            board_tiles[String(i)] = this._board[i].tile
         }
         return {
             "board": board_tiles
@@ -122,15 +120,15 @@ class Spheropoly {
 
     reset() {
         this._board = [
-            new Tile("Tile 1", 50),
+            new Tile("Go", null),
             new Tile("Tile 2", 75),
             new Tile("Tile 3", 100),
             new Tile("Tile 4", 125),
             new Tile("Tile 5", 150),
-            new Tile("Tile 6", 175),
+            new Tile("Jail", null),
             new Tile("Tile 7", 200),
             new Tile("Tile 8", 225),
-            new Tile("Tile 9", 250),
+            new Tile("Wild", null),
             new Tile("Tile 10", 275),
             new Tile("Tile 11", 300),
             new Tile("Tile 12", 400)
@@ -200,30 +198,35 @@ class Spheropoly {
 
     // Checks who owns the tile the robot is standing on, and takes action accordingly.
     roboTile() {
-        console.log(this._board[this._robot.position])
-        const currentTile = this._board[this._robot.position]
 
-        switch (currentTile.owner) {
-            case 0: // Owned by nobody. The robot wants to buy it.
-                if (this._robot.funds >= currentTile.cost) {
-                    this._robot.takeMoney(currentTile.cost)
-                    currentTile.owner = 2
-                } else {
-                    console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
-                    this._auctionTile = this._robot.position
-                }
+        switch(this._robot.position) {
+            case 0:
+                console.log("GO")
 
-            case 1: // Owned by the player. The robot must give them money or lose.
-                if (this._robot.funds >= currentTile.cost) {
-                    this._robot.takeMoney(currentTile.cost)
-                    this._human.giveMoney(currentTile.cost)
-                } else {
-                    console.log("The robot lost the game! TODO: Actually end the game here.")
+            default:
+                const currentTile = this._board[this._robot.position]
+                switch (currentTile.owner) {
+                    case 0: // Owned by nobody. The robot wants to buy it.
+                        if (this._robot.funds >= currentTile.cost) {
+                            this._robot.takeMoney(currentTile.cost)
+                            currentTile.owner = 2
+                        } else {
+                            console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
+                            this._auctionTile = this._robot.position
+                        }
+                    case 1: // Owned by the player. The robot must give them money or lose.
+                        if (this._robot.funds >= currentTile.cost) {
+                            this._robot.takeMoney(currentTile.cost)
+                            this._human.giveMoney(currentTile.cost)
+                        } else {
+                            console.log("The robot lost the game! TODO: Actually end the game here.")
+                        }     
+                    case 2:
+                        console.log("The robot landed on its own tile! TODO: Communicate this to the player.")
                 }
-            
-            case 2:
-                console.log("The robot landed on its own tile! TODO: Communicate this to the player.")
         }
+        console.log(this._board[this._robot.position])
+        
     }
 
     // The robot's turn.

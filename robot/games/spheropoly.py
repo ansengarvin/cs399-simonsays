@@ -58,12 +58,9 @@ def spheropoly(droid: SpheroEduAPI):
 
         getCommand(commandHelper)
         print(commandHelper.command)
-        sendResponse("Done")
 
+        roll = commandHelper.command["roll"]
 
-
-        """
-        roll = get_roll()
         if roll == 'x':
             exit()
         else:
@@ -73,4 +70,5 @@ def spheropoly(droid: SpheroEduAPI):
                 print("At square ", i)
                 map_instructions[current_square](droid, state)
             state.set_position((state.get_position() + roll) % 12)
-        """
+
+        sendResponse("Done")
