@@ -47,11 +47,11 @@ map_instructions = [
 ]
 
 def spheropoly(droid: SpheroEduAPI):
+    droid.set_stabilization(False)
     print("Welcome to Spheropoly!")
     state = DroidState()
     commandHelper = CommandHelper()
     while True:
-
         getCommand(commandHelper)
         print(commandHelper.command)
 
@@ -61,10 +61,12 @@ def spheropoly(droid: SpheroEduAPI):
             exit()
         else:
             roll = int(roll)
+            droid.set_stabilization(True)
             for i in range(roll):
                 current_square = (state.get_position() + i) % 12
                 print("At square ", i)
                 map_instructions[current_square](droid, state)
             state.set_position((state.get_position() + roll) % 12)
+            droid.set_stabilization(False)
 
         sendResponse("Done")
