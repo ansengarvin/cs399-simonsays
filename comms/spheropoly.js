@@ -37,6 +37,7 @@ class Player {
         this._name = name
         this._funds = 1000
         this._position = 0
+        this._lastRoll = null
     }
 
     set position(pos) {
@@ -47,15 +48,24 @@ class Player {
         return this._position
     }
 
+    get funds() {
+        return this._funds
+    }
+
+    set lastRoll(roll){
+        this._lastRoll = roll
+    }
+
+    get lastRoll() {
+        return this._lastRoll
+    }
+
     get info() {
         return {
             "funds": this._funds,
-            "position": this._position
+            "position": this._position,
+            "lastRoll": this._lastRoll
         }
-    }
-
-    get funds() {
-        return this._funds
     }
 
     reset() {
@@ -192,6 +202,7 @@ class Spheropoly {
     // Move the human along the board.
     moveHuman(roll) {
         this._human.position = (this._human.position + roll) % 12
+        this._human.lastRoll = roll
         console.log(this._human.position)
     }
 
@@ -254,7 +265,8 @@ class Spheropoly {
 
     // The robot's turn.
     roboTurn(command, receive, complete) {
-        var roll = Math.floor(Math.random() * 12)
+        var roll = Math.floor(Math.random() * 6)
+        this._robot.lastRoll = roll
         this.moveRobot(roll)
         this.roboAuction()
         this.roboTile()
@@ -288,18 +300,25 @@ router.post('/roll', function(req, res, next){
     console.log("  -- req.body:", req.body)
     if (req.body && req.body.roll) {
         spheropoly.moveHuman(req.body.roll)
+        spheropoly.lastAction = "roll"
         res.status(201).send(spheropoly.state)
     } else {
         res.status(400).send({
-            err: "Request needs a body with command."
+            err: "Request needs a body with roll present."
         })
     }
+})
+
+router.post('/confirm', function(req, res, next) {
+    spheropoly.lastAction = "confirm"
+    res.status(201).send(spheropoly.state)
 })
 
 router.post('/buy', function(req, res, next) {
     var callbackCount = 0
     spheropoly.buy()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.lastAction = "tile"
 
     function complete(msg) {
         callbackCount ++
@@ -311,7 +330,16 @@ router.post('/buy', function(req, res, next) {
 })
 
 router.post('/auction', function(req, res, next){
-
+    spheropoly.auction()
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.lastAction = "tile"
+    function complete(msg) {
+        callbackCount ++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
+    }
 })
 
 
