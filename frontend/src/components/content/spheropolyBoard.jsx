@@ -1,7 +1,7 @@
 ﻿import { css } from '@emotion/react'
 
 function Tile(props) {
-    const {owner, name, cost} = props
+    const {tile} = props
 
     const styles = css`
         height: 100px;
@@ -14,7 +14,7 @@ function Tile(props) {
 
     return (
         <div css={styles}>
-            test
+            {tile ? <>{tile.name}</> : <>TILE</>}
         </div>
     )
     
@@ -115,7 +115,6 @@ export function Board(props) {
         margin-top: auto;
     `
     const styles = css`
-        color: red;
         display: flex;
         flex-direction: row;
         margin-top:auto;
@@ -143,19 +142,19 @@ export function Board(props) {
             <div css={styles} className="row">
                 <Edge/>
                 <HalfEdgeVert/>
-                <Tile/>
+                <Tile tile={data.board["7"]}/>
                 <HalfTileVert/>
-                <Tile/>
+                <Tile tile={data.board["6"]}/>
                 <Edge/>
                 <HalfEdgeVert/>
             </div>
             <div css={styles} className="row">
                 <HalfEdgeVert/>
-                <Tile/>
-                <Tile/>
+                <Tile tile={data.board["9"]}/>
+                <Tile tile={data.board["8"]}/>
                 <HalfEdgeVert/>
-                <Tile/>
-                <Tile/>
+                <Tile tile={data.board["5"]}/>
+                <Tile tile={data.board["4"]}/>
                 <HalfEdgeVert/>
             </div>
             <div css={styles} className="row">
@@ -169,19 +168,19 @@ export function Board(props) {
             </div>
             <div css={styles} className="row">
                 <HalfEdgeVert/>
-                <Tile/>
-                <Tile/>
+                <Tile tile={data.board["10"]}/>
+                <Tile tile={data.board["11"]}/>
                 <HalfEdgeVert/>
-                <Tile/>
-                <Tile/>
+                <Tile tile={data.board["2"]}/>
+                <Tile tile={data.board["3"]}/>
                 <HalfEdgeVert/>
             </div>
             <div css={styles} className="row">
                 <HalfEdgeVert/>
                 <Edge/>
-                <Tile/>
+                <Tile tile={data.board["0"]}/>
                 <HalfTileVert/>
-                <Tile/>
+                <Tile tile={data.board["1"]}/>
                 <HalfEdgeVert/>
                 <Edge/>
             </div>
