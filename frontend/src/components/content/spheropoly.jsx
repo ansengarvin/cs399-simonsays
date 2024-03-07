@@ -23,16 +23,32 @@ export async function action({ request, params }) {
             }
         )
     } else if (data.phase == "tile") {
-        if (data.buy) {
+        if(data.owner == 0) {
+            if (data.buy) {
+                return fetch(
+                    "http://localhost:19931/spheropoly/buy",
+                    {
+                        method: "POST"
+                    }
+                )
+            } else {
+                return fetch(
+                    "http://localhost:19931/spheropoly/auction",
+                    {
+                        method: "POST"
+                    }
+                )
+            }
+        } else if (data.owner == 2) {
             return fetch(
-                "http://localhost:19931/spheropoly/buy",
+                "http://localhost:19931/spheropoly/pay",
                 {
                     method: "POST"
                 }
             )
         } else {
             return fetch(
-                "http://localhost:19931/spheropoly/auction",
+                "http://localhost:19931/spheropoly/continue",
                 {
                     method: "POST"
                 }
@@ -76,6 +92,8 @@ function Roll(props) {
                 Your turn!
             </div>
             <div className = "explanation">
+                    {response.lastAction == "tile" && 
+                    <>If the robot is not where they should be, please lend a hand and move them!<br/></>}
                     Press the button to roll the dice!
             </div>
             <Form method="POST">
@@ -92,6 +110,7 @@ function Tile(props) {
     if (response && response.lastAction && response.lastAction == "tile") {
         setPhase("roll")
     }
+    console.log("Owner of this tile is", response.board[String(response.human.position)].owner)
     if (state == "idle"){
         return (
             <div className = "controls">
@@ -102,19 +121,26 @@ function Tile(props) {
                         You rolled a {response.human.lastRoll}. Please move your piece, then choose the following.
                 </div>
                 <div className = "buttons">
-                        { buy == true
+                        { response.board[String(response.human.position)].owner == 0 && (buy == true 
                         ? <button className="command green selected">Buy</button>
-                        : <button className="command green" onClick={() =>{setBuy(true)}}>Buy</button>
+                        : <button className="command green" onClick={() =>{setBuy(true)}}>Buy</button>)
                         }
-                        { buy == false
+                        { response.board[String(response.human.position)].owner == 0 && (buy == false
                         ? <button className="command red selected">Auction</button>
-                        : <button className="command red" onClick={() =>{setBuy(false)}}>Auction</button>
+                        : <button className="command red" onClick={() =>{setBuy(false)}}>Auction</button>)
                         }
+                        {response.board[String(response.human.position)].owner == 1
+                        && <>You landed on your own tile! Press the button to move on.</>}
+                        {response.board[String(response.human.position)].owner == 2
+                        && <>Oh no! You landed on the robot's tile! Press the button to pay them!</>}
+                        {response.board[String(response.human.position)].owner == -1
+                        && <>You landed on federal property. This does nothing for now.</>}
                     </div>
                 <Form method="POST">
                     <input type = "hidden" name="buy" value={buy}/>
                     <input type = "hidden" name="phase" value={phase}/>
-                    <button className="submit"><i class="fa-solid fa-dice fa-2xl"></i></button>
+                    <input type = "hidden" name="owner" value={response.board[String(response.human.position)].owner}/>
+                    <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
                 </Form>
             </div>
         )

@@ -71,6 +71,42 @@ def getCommand(commandHelper: CommandHelper):
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
+
+def eatCommand():
+    print("Opening command server")
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    channel = connection.channel()
+
+    channel.queue_declare(queue='command')
+
+    def callback(ch, method, properties, body):
+        print("Received. Returning the following:")
+        print(body.decode())
+        channel.close()
+
+    channel.basic_consume(queue='command', on_message_callback=callback, auto_ack=True)
+
+    print(' [*] Waiting for messages. To exit press CTRL+C')
+    channel.start_consuming()
+
+
+def eatReply():
+    print("Opening command server")
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    channel = connection.channel()
+
+    channel.queue_declare(queue='reply')
+
+    def callback(ch, method, properties, body):
+        print("Received. Returning the following:")
+        print(body.decode())
+        channel.close()
+
+    channel.basic_consume(queue='command', on_message_callback=callback, auto_ack=True)
+
+    print(' [*] Waiting for messages. To exit press CTRL+C')
+    channel.start_consuming()
+
 """
 Sends a response back to the server.
 """

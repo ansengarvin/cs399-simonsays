@@ -30,6 +30,10 @@ class Tile {
     get cost() {
         return this._cost
     }
+
+    get name() {
+        return this._name
+    }
 }
 
 class Player {
@@ -90,18 +94,22 @@ class Spheropoly {
             new Tile("Tile 3", 100),
             new Tile("Tile 4", 125),
             new Tile("Tile 5", 150),
+            new Tile("Tile 6", 175),
             new Tile("Jail", null),
-            new Tile("Tile 7", 200),
             new Tile("Tile 8", 225),
-            new Tile("Wild", null),
-            new Tile("Tile 10", 275),
+            new Tile("Tile 9", 250),
+            new Tile("The Wilds", null),
             new Tile("Tile 11", 300),
             new Tile("Tile 12", 400)
         ]
+        this._board[0].owner = -1
+        this._board[6].owner = -1
+        this._board[8].owner = -1
         this._robot = new Player("robot")
         this._human = new Player("human")
         this._auctionTile = null
         this._lastAction = "start"
+        this._summary = ""
     }
 
     reset() {
@@ -111,18 +119,22 @@ class Spheropoly {
             new Tile("Tile 3", 100),
             new Tile("Tile 4", 125),
             new Tile("Tile 5", 150),
+            new Tile("Tile 6", 175),
             new Tile("Jail", null),
-            new Tile("Tile 7", 200),
             new Tile("Tile 8", 225),
-            new Tile("Wild", null),
-            new Tile("Tile 10", 275),
+            new Tile("Tile 9", 250),
+            new Tile("The Wilds", null),
             new Tile("Tile 11", 300),
             new Tile("Tile 12", 400)
         ]
+        this._board[0].owner = -1
+        this._board[6].owner = -1
+        this._board[9].owner = -1
         this._robot = new Player("robot")
         this._human = new Player("human")
         this._auctionTile = null
         this._lastAction = "start"
+        this._summary = ""
     }
 
     get board() {
@@ -160,6 +172,7 @@ class Spheropoly {
     get state() {
         return {
             "lastAction": this._lastAction,
+            "summary": this._summary,
             "robot": this._robot.info,
             "human": this._human.info,
             board: this.board["board"]      
@@ -199,6 +212,13 @@ class Spheropoly {
         this._auctionTile = this._human.position
     }
 
+    // Human player pays rent on a tile that the Sphero owns.
+    pay(){
+        transaction = this._board[this._human.position].cost
+        this._human.takeMoney(transaction)
+        this._robot.giveMoney(transaction)
+    }
+
     // Move the human along the board.
     moveHuman(roll) {
         this._human.position = (this._human.position + roll) % 12
@@ -209,6 +229,7 @@ class Spheropoly {
     // Move the robot along the board.
     moveRobot(roll) {
         this._robot.position = (this._robot.position + roll) % 12
+        this._summary = "The robot rolled a " + roll + "."
     }
 
     // Checks if there's a property on auction for the robot to buy, and buys it if there is.
@@ -218,10 +239,12 @@ class Spheropoly {
                 this._robot.funds -= this.board[this._auctionTile].cost
                 this.board[this._auctionTile].owner = 2
                 this._auctionTile = null
+                this._summary = this._summary + " The robot bought the auctioned property."
                 return 1
             } else {
                 console.log("Robot cannot afford to buy the auctioned property.")
                 this._auctionTile = null
+                this._summary = this._summary + " The robot could not afford the auctioned property."
                 return -1
             }
         } else {
@@ -232,31 +255,40 @@ class Spheropoly {
 
     // Checks who owns the tile the robot is standing on, and takes action accordingly.
     roboTile() {
-
         switch(this._robot.position) {
             case 0:
                 console.log("GO")
-
+                break
             default:
                 const currentTile = this._board[this._robot.position]
                 switch (currentTile.owner) {
+                    case -1: // Owned by the state. Nothing happens yet.
+                        this._summary = this._summary + " The robot landed at " + currentTile.name + ", which is federal property."
+                        break
                     case 0: // Owned by nobody. The robot wants to buy it.
                         if (this._robot.funds >= currentTile.cost) {
                             this._robot.takeMoney(currentTile.cost)
                             currentTile.owner = 2
+                            this._summary = this._summary + " The robot bought the property it landed on."
                         } else {
                             console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
                             this._auctionTile = this._robot.position
+                            this._summary = this._summary + " The robot could not afford the property it landed on and it was sent to auction."
                         }
+                        break
                     case 1: // Owned by the player. The robot must give them money or lose.
                         if (this._robot.funds >= currentTile.cost) {
                             this._robot.takeMoney(currentTile.cost)
                             this._human.giveMoney(currentTile.cost)
+                            this._summary = this._summary + " The robot landed on your tile and paid you $" + currentTile.cost
                         } else {
                             console.log("The robot lost the game! TODO: Actually end the game here.")
-                        }     
+                            this._summary = this._summary + " The robot landed on your tile and couldn't afford it. They lost."
+                        }
+                        break     
                     case 2:
-                        console.log("The robot landed on its own tile! TODO: Communicate this to the player.")
+                        this._summary = this._summary + " The robot landed on their own tile."
+                        break
                 }
         }
         console.log(this._board[this._robot.position])
@@ -265,7 +297,8 @@ class Spheropoly {
 
     // The robot's turn.
     roboTurn(command, receive, complete) {
-        var roll = Math.floor(Math.random() * 6)
+        var roll = (Math.floor(Math.random() * 6)) + 1
+        console.log("We got a")
         this._robot.lastRoll = roll
         this.moveRobot(roll)
         this.roboAuction()
@@ -330,7 +363,35 @@ router.post('/buy', function(req, res, next) {
 })
 
 router.post('/auction', function(req, res, next){
+    var callbackCount = 0
     spheropoly.auction()
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.lastAction = "tile"
+    function complete(msg) {
+        callbackCount ++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
+    }
+})
+
+router.post('/pay', function(req, res, next){
+    var callbackCount = 0
+    spheropoly.pay()
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.lastAction = "tile"
+    function complete(msg) {
+        callbackCount ++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
+    }
+})
+
+router.post('/continue', function(req, res, next){
+    var callbackCount = 0
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {

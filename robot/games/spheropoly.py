@@ -29,11 +29,7 @@ def right(droid: SpheroEduAPI, state: DroidState):
 
 def jail(droid: SpheroEduAPI, state: DroidState):
     print("Jail")
-
-def get_roll():
-    #TODO: Make this get the number from the server
-    return input("Enter number")
-
+    
 
 map_instructions = [
     left,

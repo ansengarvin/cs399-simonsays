@@ -1,7 +1,7 @@
 ﻿import { css } from '@emotion/react'
 
 const owners = [
-    null,
+    "Nobody",
     "You",
     "Sphero"
 ]
@@ -22,7 +22,7 @@ function Tile(props) {
         <div css={styles}>
             {tile && <>{tile.name}</>}<br/>
             {tile && tile.cost && <>Price: {tile.cost}</>}<br/>
-            {tile && tile.owner != 0 && <>Price: {owners[tile.owner]}</>}<br/>
+            {tile && tile.owner != -1 && <>Owner: {owners[tile.owner]}</>}<br/>
             {tile && tile.hasHuman && <i className="fa-solid fa-person fa-2xl"></i>}
             {tile && tile.hasRobot && <i className="fa-solid fa-robot fa-xl"></i>}
         </div>
@@ -130,6 +130,11 @@ export function Board(props) {
         margin-top:auto;
     `
 
+    const white = css`
+        color: white;
+        flex-wrap: wrap;
+    `
+
     const empty = css`
         height: 565px;
         width: 565px;
@@ -203,6 +208,11 @@ export function Board(props) {
                 <HalfEdge/>
                 <HalfEdge/>
                 <EdgeCorner/>
+            </div>
+            <div css={styles, white} className="row">
+                Your Money: ${data.human.funds}<br/>
+                Sphero's Money: ${data.robot.funds}<br/>
+                {data.summary != "" && <>{data.summary}</>}
             </div>
             
         </div> :
