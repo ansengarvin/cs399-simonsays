@@ -1,5 +1,11 @@
 ﻿import { css } from '@emotion/react'
 
+const owners = [
+    null,
+    "You",
+    "Sphero"
+]
+
 function Tile(props) {
     const {tile} = props
 
@@ -14,7 +20,11 @@ function Tile(props) {
 
     return (
         <div css={styles}>
-            {tile ? <>{tile.name}</> : <>TILE</>}
+            {tile && <>{tile.name}</>}<br/>
+            {tile && tile.cost && <>Price: {tile.cost}</>}<br/>
+            {tile && tile.owner != 0 && <>Price: {owners[tile.owner]}</>}<br/>
+            {tile && tile.hasHuman && <i className="fa-solid fa-person fa-2xl"></i>}
+            {tile && tile.hasRobot && <i className="fa-solid fa-robot fa-xl"></i>}
         </div>
     )
     
@@ -107,7 +117,7 @@ function HalfTileVert(props) {
 }
 
 export function Board(props) {
-    const {data} = props
+    const {data, state} = props
 
     const main = css`
         display: flex;
@@ -126,9 +136,10 @@ export function Board(props) {
         margin-top: auto;
         background-color: rgb(57, 57, 57);
     `
+    console.log(data)
     return(
         <>
-        {data 
+        {state == "idle" && data && data.board
             ? <div css={main}>
             <div css={styles} className="row">
                 <EdgeCorner/>

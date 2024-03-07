@@ -148,6 +148,7 @@ app.post("/command", function (req, res, next) {
  * Generic 404 message for nonexistant pages
  */
 app.use("*", function (req, res, next) {
+    console.log("We got a 404 somehow")
     res.status(404).send({
         err: `Requested URL doesn't exist: ${req.originalUrl}`
     })
