@@ -1,6 +1,13 @@
 ﻿const express = require("express")
 const app = express()
 
+const spheropoly = require('./spheropoly')
+
+/*
+    This was created while following along with this RabbitMQ tutorial: 
+    https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html
+*/
+
 // Cors is 100% necessary to get localhost to communicate with this server.
 // Source: https://stackoverflow.com/questions/43150051/how-to-enable-cors-nodejs-with-express
 const cors = require('cors');
@@ -11,6 +18,8 @@ const PORT = 19931
 app.use(express.json())
 
 app.use(cors())
+
+app.use('/spheropoly', spheropoly)
 
 function commandSphero(msg, complete) {
     var amqp = require('amqplib/callback_api');
@@ -33,6 +42,34 @@ function commandSphero(msg, complete) {
 
             console.log(" [x] Sent %s", msg);
             complete("AB")
+        });
+        setTimeout(function() {
+            connection.close();
+        }, 500);
+    });
+}
+
+function sendJSON(msg, complete) {
+    var amqp = require('amqplib/callback_api');
+    amqp.connect('amqp://localhost', function(error0, connection) {
+        if (error0) {
+            throw error0;
+        }
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            var query_queue = 'command';
+
+            channel.assertQueue(query_queue, {
+                durable: false
+            });
+
+            channel.sendToQueue(query_queue, Buffer.from(JSON.stringify(msg)));
+
+            console.log(" [x] Sent %s", msg);
+            complete("JSON Sent.")
         });
         setTimeout(function() {
             connection.close();
@@ -74,9 +111,11 @@ function awaitReply(complete) {
     });
 }
 
+app.set("command", sendJSON)
+app.set("awaitReply", awaitReply)
+
 /*
-This was created while following along with this RabbitMQ tutorial: 
-    https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html
+Command function for Sphero Simon
 */
 app.post("/command", function (req, res, next) {
     var callbackCount = 0
@@ -104,10 +143,12 @@ app.post("/command", function (req, res, next) {
     }
 })
 
+
 /*
  * Generic 404 message for nonexistant pages
  */
 app.use("*", function (req, res, next) {
+    console.log("We got a 404 somehow")
     res.status(404).send({
         err: `Requested URL doesn't exist: ${req.originalUrl}`
     })

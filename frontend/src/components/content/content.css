@@ -21,6 +21,11 @@
     padding: 40px;
 }
 
+.columns {
+    display: flex;
+    flex-direction: row;
+}
+
 .title{
     display: flex;
     flex-direction: column;
@@ -32,7 +37,18 @@
     border-radius: 30px;
 }
 
-.title .caption{
+.controls{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: rgb(236, 236, 236);
+    border-radius: 30px;
+    margin-bottom: auto;
+    padding: 100px;
+}
+
+.caption{
     margin: 10px;
     font-size: 32px;
 }
@@ -92,12 +108,14 @@ button {
 .red{
     background-color: rgb(255, 94, 94);
     border-color: rgb(148, 51, 51);
+    color: rgb(148, 51, 51);
     border-style: solid;
 }
 
 .green{
     background-color: rgb(124, 255, 94);
     border-color: rgb(51, 148, 72);
+    color: rgb(51, 148, 72);
     border-style: solid;
 }
 

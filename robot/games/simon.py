@@ -3,7 +3,7 @@ from spherov2.sphero_edu import SpheroEduAPI
 from anims.anims import *
 from spherov2.commands.io import FrameRotationOptions
 import random
-from lib.pipeline import getAction, sendResponse
+from lib.pipeline import getSimonAction, sendResponse
 from lib.actionhistory import ActionHistory
 from lib.commands import *
 from lib.status import *
@@ -23,7 +23,7 @@ def droid_turn(droid: SpheroEduAPI, droid_history: ActionHistory):
     mistake = 0
     droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
     droid.play_matrix_animation(0)
-    getAction(droid_history)
+    getSimonAction(droid_history)
 
     print("Droid has new command:", droid_history.get_recent_action())
 
@@ -105,7 +105,7 @@ def human_turn(droid: SpheroEduAPI, human_history: ActionHistory):
     droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
     droid.set_stabilization(False)
     droid.play_matrix_animation(6)
-    getAction(human_history)
+    getSimonAction(human_history)
     print("New action is", human_action_names[human_history.get_recent_action()])
 
     actions_list = human_history.get_actions()

@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/babel-plugin": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@tanstack/react-query": "^5.25.0",
     "amqplib": "^0.10.3",
     "buffer": "^6.0.3",
     "react": "^18.2.0",

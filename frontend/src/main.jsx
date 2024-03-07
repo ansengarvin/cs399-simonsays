@@ -1,8 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { Root, Home } from "./Routes"
+import { Root, Home, Spheropoly } from "./Routes"
+import {action as spheropolyAction} from "./components/content/spheropoly"
+
 import { 
     SpheroSimonLanding,
     SpheroSimonHuman,
@@ -11,6 +14,8 @@ import {
     action as postAction, 
 } from './components/content/simon'
 import './index.css'
+
+const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
     {
@@ -39,7 +44,11 @@ const router = createBrowserRouter([
                         action: postAction
                     }
                 ]
-                
+            },
+            {
+                path: "spheropoly",
+                element: <Spheropoly/>,
+                action: spheropolyAction
             }
         ]
     }
@@ -48,6 +57,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        </QueryClientProvider>
     </React.StrictMode>,
 )
