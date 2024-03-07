@@ -96,7 +96,22 @@ class Spheropoly {
     get board() {
         const board_tiles = {}
         for (let i = 0; i < this._board.length; i++) {
+            const tile = this._board[i].tile
             board_tiles[String(i)] = this._board[i].tile
+
+            if (i == this._human.position) {
+                tile["hasHuman"] = true
+            } else {
+                tile["hasHuman"] = false
+            }
+
+            if (i == this._robot.position) {
+                tile["hasRobot"] = true
+            } else {
+                tile["hasRobot"] = false
+            }
+
+            board_tiles[String(i)] = tile
         }
         return {
             "board": board_tiles

@@ -131,13 +131,13 @@ export function Board(props) {
         {data 
             ? <div css={main}>
             <div css={styles} className="row">
-            <EdgeCorner/>
-            <HalfEdge/>
-            <HalfEdge/>
-            <EdgeCorner/>
-            <HalfEdge/>
-            <HalfEdge/>
-            <EdgeCorner/>
+                <EdgeCorner/>
+                <HalfEdge/>
+                <HalfEdge/>
+                <EdgeCorner/>
+                <HalfEdge/>
+                <HalfEdge/>
+                <EdgeCorner/>
             </div>
             <div css={styles} className="row">
                 <Edge/>
@@ -185,13 +185,13 @@ export function Board(props) {
                 <Edge/>
             </div>
             <div css={styles} className="row">
-            <EdgeCorner/>
-            <HalfEdge/>
-            <HalfEdge/>
-            <EdgeCorner/>
-            <HalfEdge/>
-            <HalfEdge/>
-            <EdgeCorner/>
+                <EdgeCorner/>
+                <HalfEdge/>
+                <HalfEdge/>
+                <EdgeCorner/>
+                <HalfEdge/>
+                <HalfEdge/>
+                <EdgeCorner/>
             </div>
             
         </div> :
