@@ -124,6 +124,31 @@ const TileColors = {
     11: '#ff80b7',
 }
 
+const playerDrawCoords = {
+    0: { "x": 187, "y": 510 },
+    1: { "x": 412, "y": 435 },
+    2: { "x": 340, "y": 260 },
+    3: { "x": 512, "y": 335 },
+    4: { "x": 438, "y": 110 },
+    5: { "x": 260, "y": 186 },
+    6: { "x": 338, "y": 10 },
+    7: { "x": 115, "y": 90 },
+    8: { "x": 187, "y": 260 },
+    9: { "x": 10, "y": 186 },
+    10: { "x": 87, "y": 410 },
+    11: { "x": 260, "y": 335 }
+}
+
+function drawPlayer(context, image, tile) {
+    context.drawImage(
+        image,
+        playerDrawCoords[tile]["x"],
+        playerDrawCoords[tile]["y"],
+        25,
+        25
+    )
+}
+
 export function Board(props) {
     const { data, state } = props
     const canvasRef = useRef(null)
@@ -226,15 +251,26 @@ export function Board(props) {
         drawText(context, ("$" + data.board["10"]["cost"]), 100, 350) // Tile 10
         drawText(context, ("$" + data.board["11"]["cost"]), 200, 350) // Tile 10
 
-        /*
-        const hIcon = new Image()
-        hIcon.src = man2
+
+        const playerIcon = new Image()
+        playerIcon.src = man2
         console.log("Before load")
-        hIcon.onload = () => {
+        playerIcon.onload = () => {
             console.log("onLoad")
-            context.drawImage(hIcon, 0, 0, 50, 50)
+            drawPlayer(context, playerIcon, 0)
+            drawPlayer(context, playerIcon, 1)
+            drawPlayer(context, playerIcon, 2)
+            drawPlayer(context, playerIcon, 3)
+            drawPlayer(context, playerIcon, 4)
+            drawPlayer(context, playerIcon, 5)
+            drawPlayer(context, playerIcon, 6)
+            drawPlayer(context, playerIcon, 7)
+            drawPlayer(context, playerIcon, 8)
+            drawPlayer(context, playerIcon, 9)
+            drawPlayer(context, playerIcon, 10)
+            drawPlayer(context, playerIcon, 11)
         }
-        */
+
 
     }, [])
 
