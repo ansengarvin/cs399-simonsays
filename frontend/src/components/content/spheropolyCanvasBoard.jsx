@@ -165,7 +165,7 @@ export function Board(props) {
         drawPlayerPod(context, 3, TileColors[7], 100, 50)                                   // Tile 7 Player
         drawTile(context, { "West": 1, "South": 1, "East": 1 }, TileColors[7], 150, 50)     // Tile 7 Sphero
         drawEdge(context, 1, 250, 50, TileColors[6])                                        // In-Between Tile East of 6
-        drawTile(context, { "East": 1, "South": 1, "West": 1 }, TileColors[6], 300, 50)     // Tile 6 Sphero
+        drawTile(context, { "North": 1, "South": 1, "West": 1 }, TileColors[6], 300, 50)     // Tile 6 Sphero
         drawPlayerPod(context, 0, TileColors[4], 400, 100)                                  // Tile 4 Player
         drawEdge(context, 1, 500, 100)                                                    // Edge
 
@@ -214,17 +214,17 @@ export function Board(props) {
 
         context.font = "15px Georgia"
         drawText(context, data.board["0"]["name"], 200, 450) // Tile 0
-        drawText(context, data.board["1"]["name"], 350, 450) // Tile 1
-        drawText(context, data.board["2"]["name"], 350, 350) // Tile 2
+        drawText(context, ("$" + data.board["1"]["cost"]), 350, 450) // Tile 1
+        drawText(context, ("$" + data.board["2"]["cost"]), 350, 350) // Tile 2
         drawText(context, data.board["3"]["name"], 450, 350) // Tile 3
-        drawText(context, data.board["4"]["name"], 450, 200) // Tile 4
-        drawText(context, data.board["5"]["name"], 350, 200) // Tile 5
+        drawText(context, ("$" + data.board["4"]["cost"]), 450, 200) // Tile 4
+        drawText(context, ("$" + data.board["5"]["cost"]), 350, 200) // Tile 5
         drawText(context, data.board["6"]["name"], 350, 100) // Tile 6
-        drawText(context, data.board["7"]["name"], 200, 100) // Tile 7
-        drawText(context, data.board["8"]["name"], 200, 200) // Tile 8
+        drawText(context, ("$" + data.board["7"]["cost"]), 200, 100) // Tile 7
+        drawText(context, ("$" + data.board["8"]["cost"]), 200, 200) // Tile 8
         drawText(context, data.board["9"]["name"], 100, 200) // Tile 9
-        drawText(context, data.board["10"]["name"], 100, 350) // Tile 10
-        drawText(context, data.board["11"]["name"], 200, 350) // Tile 10
+        drawText(context, ("$" + data.board["10"]["cost"]), 100, 350) // Tile 10
+        drawText(context, ("$" + data.board["11"]["cost"]), 200, 350) // Tile 10
 
         /*
         const hIcon = new Image()
@@ -240,8 +240,6 @@ export function Board(props) {
 
     return (
         <div>
-            <img src={man2} />
-            Canvas Test
             <CanvasContainer>
                 <canvas ref={canvasRef} />
             </CanvasContainer>

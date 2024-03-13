@@ -3,6 +3,7 @@ import { Form, useActionData, useNavigation, NavLink } from 'react-router-dom'
 
 import { css } from '@emotion/react'
 import { Board } from './spheropolyCanvasBoard'
+import { EmptyBoard } from './emptyBoard'
 
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
@@ -173,7 +174,10 @@ export function Spheropoly() {
                     <div className="columns">
                         <Start phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
-                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
+                            {(state == "idle" && response && response.board)
+                                ? <Board data={response} state={state} />
+                                : <EmptyBoard text="Game needs to start!" />
+                            }
                         </div>
                     </div>
                 </div>
