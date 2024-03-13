@@ -108,6 +108,22 @@ function drawText(context, text, x, y) {
     context.fillText(text, x, y, [200])
 }
 
+// Centralized location to keep track of colors rather than having to go in and type all of them myself.
+const TileColors = {
+    0: '#ff5151',
+    1: '#f39333',
+    2: '#fcff51',
+    3: '#b1ff2c',
+    4: '#50ff3d',
+    5: '#1f6e00',
+    6: '#33fe73',
+    7: '#51ffd9',
+    8: '#517dff',
+    9: '#6e51ff',
+    10: '#a851ff',
+    11: '#ff51d9'
+}
+
 export function Board(props) {
     const { data, state } = props
     const canvasRef = useRef(null)
@@ -140,58 +156,58 @@ export function Board(props) {
         drawEdge(context, 0, 0, 0)                                                        // Edge
         drawEdge(context, 0, 100, 0)                                                      // Edge
         drawEdge(context, 0, 200, 0)                                                      // Edge
-        drawPlayerPod(context, 0, '#33fe73', 300, 0)                                    // Tile 7 Player
+        drawPlayerPod(context, 0, TileColors[6], 300, 0)                                    // Tile 6 Player
         drawTile(context, {}, '#000000', 400, 0)                                        // Edge
         drawEdge(context, 1, 500, 0)                                                      // Edge
 
         // Second Row
         drawTile(context, {}, '#000000', 0, 50)                                         // Edge
-        drawPlayerPod(context, 3, '#51ffd9', 100, 50)                                   // Tile 8 Player
-        drawTile(context, { "West": 1, "South": 1, "East": 1 }, '#51ffd9', 150, 50)     // Tile 8 Sphero
-        drawEdge(context, 1, 250, 50, '#33fe73')                                        // In-Between Tile East of 7
-        drawTile(context, { "East": 1, "South": 1, "West": 1 }, '#33fe73', 300, 50)     // Tile 7 Sphero
-        drawPlayerPod(context, 0, '#50ff3d', 400, 100)                                  // Tile 5 Player
+        drawPlayerPod(context, 3, TileColors[7], 100, 50)                                   // Tile 7 Player
+        drawTile(context, { "West": 1, "South": 1, "East": 1 }, TileColors[7], 150, 50)     // Tile 7 Sphero
+        drawEdge(context, 1, 250, 50, TileColors[6])                                        // In-Between Tile East of 6
+        drawTile(context, { "East": 1, "South": 1, "West": 1 }, TileColors[6], 300, 50)     // Tile 6 Sphero
+        drawPlayerPod(context, 0, TileColors[4], 400, 100)                                  // Tile 4 Player
         drawEdge(context, 1, 500, 100)                                                    // Edge
 
         // Third Row
-        drawPlayerPod(context, 3, '#6e51ff', 0, 150)                                    // Tile 10 Player
-        drawTile(context, { "East": 1, "West": 1, "South": 1 }, '#6e51ff', 50, 150)     // Tile 10 Sphero
-        drawTile(context, { "West": 1, "North": 1, "South": 1 }, '#517dff', 150, 150)   // Tile 9 Sphero
-        drawPlayerPod(context, 3, '#1f6e00', 250, 150)                                  // Tile 6 Player
-        drawTile(context, { "West": 1, "North": 1, "East": 1 }, '#1f6e00', 300, 150)    // Tile 6 Sphero
-        drawTile(context, { "West": 1, "North": 1, "South": 1 }, '#50ff3d', 400, 150)   // Tile 5 Sphero
+        drawPlayerPod(context, 3, TileColors[9], 0, 150)                                    // Tile 9 Player
+        drawTile(context, { "East": 1, "West": 1, "South": 1 }, TileColors[9], 50, 150)     // Tile 9 Sphero
+        drawTile(context, { "West": 1, "North": 1, "South": 1 }, TileColors[8], 150, 150)   // Tile 8 Sphero
+        drawPlayerPod(context, 3, TileColors[5], 250, 150)                                  // Tile 5 Player
+        drawTile(context, { "West": 1, "North": 1, "East": 1 }, TileColors[5], 300, 150)    // Tile 5 Sphero
+        drawTile(context, { "West": 1, "North": 1, "South": 1 }, TileColors[4], 400, 150)   // Tile 4 Sphero
         drawEdge(context, 1, 500, 200)                                                    // Edge
 
         // Fourth Row
         drawEdge(context, 1, 0, 250)                                                      // Edge
-        drawEdge(context, 0, 50, 250, '#6e51ff')                                        // In-Between Tile South of 10
-        drawPlayerPod(context, 2, '#517dff', 150, 250)                                  // Tile 9 Player
+        drawEdge(context, 0, 50, 250, TileColors[9])                                        // In-Between Tile South of 9
+        drawPlayerPod(context, 2, TileColors[8], 150, 250)                                  // Tile 8 Player
         drawCorner(context, 250, 250)                                                     // Board Center
-        drawPlayerPod(context, 0, '#fcff51', 300, 250)                                  // Tile 3 Player
-        drawEdge(context, 0, 400, 250, '#b1ff2c')                                       // In-Between Tile North of 4
+        drawPlayerPod(context, 0, TileColors[2], 300, 250)                                  // Tile 2 Player
+        drawEdge(context, 0, 400, 250, TileColors[3])                                       // In-Between Tile North of 4
 
 
         // Fifth Row
-        drawTile(context, { "South": 1, "East": 1, "North": 1 }, '#a851ff', 50, 300)    // Tile 11 Sphero
-        drawTile(context, { "West": 1, "East": 1, "South": 1 }, '#ff51d9', 150, 300)    // Tile 12 Sphero
-        drawPlayerPod(context, 1, '#ff51d9', 250, 300)                                  // Tile 12 Player
-        drawTile(context, { "South": 1, "North": 1, "East": 1 }, '#fcff51', 300, 300)   // Tile 3 Sphero
-        drawTile(context, { "West": 1, "East": 1, "North": 1 }, '#b1ff2c', 400, 300)    // Tile 4 Sphero
-        drawPlayerPod(context, 1, '#b1ff2c', 500, 300)                                  // Tile 4 Player
+        drawTile(context, { "South": 1, "East": 1, "North": 1 }, TileColors[10], 50, 300)    // Tile 10 Sphero
+        drawTile(context, { "West": 1, "East": 1, "South": 1 }, TileColors[11], 150, 300)    // Tile 11 Sphero
+        drawPlayerPod(context, 1, TileColors[11], 250, 300)                                  // Tile 11 Player
+        drawTile(context, { "South": 1, "North": 1, "East": 1 }, TileColors[2], 300, 300)   // Tile 2 Sphero
+        drawTile(context, { "West": 1, "East": 1, "North": 1 }, TileColors[3], 400, 300)    // Tile 3 Sphero
+        drawPlayerPod(context, 1, TileColors[3], 500, 300)                                  // Tile 3 Player
 
         // Sixth Row
         drawEdge(context, 1, 0, 350)
-        drawPlayerPod(context, 2, '#a851ff', 50, 400)                                   // Tile 11 Player
-        drawTile(context, { "North": 1, "South": 1, "East": 1 }, '#ff5151', 150, 400)   // Tile 0 Sphero
-        drawEdge(context, 1, 250, 400, '#ff5151')                                       // Tile 0 Player
-        drawTile(context, { "West": 1, "North": 1, "East": 1 }, '#f39333', 300, 400)    // Tile 1 Sphero
-        drawPlayerPod(context, 1, '#f39333', 400, 400)                                  // Tile 1 Player
+        drawPlayerPod(context, 2, TileColors[10], 50, 400)                                   // Tile 10 Player
+        drawTile(context, { "North": 1, "South": 1, "East": 1 }, TileColors[0], 150, 400)   // Tile 0 Sphero
+        drawEdge(context, 1, 250, 400, TileColors[0])                                       // Tile 0 Player
+        drawTile(context, { "West": 1, "North": 1, "East": 1 }, TileColors[1], 300, 400)    // Tile 1 Sphero
+        drawPlayerPod(context, 1, TileColors[1], 400, 400)                                  // Tile 1 Player
         drawTile(context, {}, '#000000', 450, 400)
 
         // Seventh Row
         drawEdge(context, 1, 0, 450)                                                      // Edge
         drawTile(context, {}, '#000000', 50, 450)                                       // Edge
-        drawPlayerPod(context, 2, '#ff5151', 150, 500)                                  // Tile 0 Player
+        drawPlayerPod(context, 2, TileColors[0], 150, 500)                                  // Tile 0 Player
         drawEdge(context, 0, 250, 500)                                                    // Edge
         drawEdge(context, 0, 350, 500)                                                    // Edge
         drawEdge(context, 0, 450, 500)                                                    // Edge
