@@ -1,4 +1,9 @@
-﻿import { css } from '@emotion/react'
+﻿/*
+ *  This is the old way of doing the Spheropoly board, with flex grid.
+ *  This is not how it's done anymore. To see the new board, look at SpheropolyCanvas.
+ */
+
+import { css } from '@emotion/react'
 
 const owners = [
     "Nobody",
@@ -130,7 +135,7 @@ export function Board(props) {
         margin-top:auto;
     `
 
-    const white = css`
+    const whiteStyle = css`
         color: white;
         flex-wrap: wrap;
     `
@@ -209,7 +214,7 @@ export function Board(props) {
                         <HalfEdge />
                         <EdgeCorner />
                     </div>
-                    <div css={styles, white} className="row">
+                    <div css={[styles, whiteStyle]} className="row">
                         Your Money: ${data.human.funds}<br />
                         Sphero's Money: ${data.robot.funds}<br />
                         {data.summary != "" && <>{data.summary}</>}

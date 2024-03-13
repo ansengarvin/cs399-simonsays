@@ -2,7 +2,7 @@
 import { Form, useActionData, useNavigation, NavLink } from 'react-router-dom'
 
 import { css } from '@emotion/react'
-import { Board } from './SpheropolyCanvas'
+import { Board } from './spheropolyCanvasBoard'
 
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
