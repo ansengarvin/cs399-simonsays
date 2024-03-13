@@ -197,7 +197,18 @@ export function Board(props) {
 
         // Text
         context.font = "20px Georgia"
-        drawText(context, "Jimmy", 170, 80)
+        drawText(context, "0", 200, 450) // Tile 0
+        drawText(context, "1", 350, 450) // Tile 1
+        drawText(context, "2", 350, 350) // Tile 2
+        drawText(context, "3", 450, 350) // Tile 3
+        drawText(context, "4", 450, 200) // Tile 4
+        drawText(context, "5", 350, 200) // Tile 5
+        drawText(context, "6", 350, 100) // Tile 6
+        drawText(context, "7", 200, 100) // Tile 7
+        drawText(context, "8", 200, 200) // Tile 8
+        drawText(context, "9", 100, 200) // Tile 9
+        drawText(context, "10", 100, 350) // Tile 10
+        drawText(context, "11", 200, 350) // Tile 10
 
 
         /*
