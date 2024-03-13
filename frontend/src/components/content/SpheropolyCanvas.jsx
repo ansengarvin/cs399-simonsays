@@ -110,18 +110,18 @@ function drawText(context, text, x, y) {
 
 // Centralized location to keep track of colors rather than having to go in and type all of them myself.
 const TileColors = {
-    0: '#ff5151',
-    1: '#f39333',
-    2: '#fcff51',
-    3: '#b1ff2c',
-    4: '#50ff3d',
-    5: '#1f6e00',
-    6: '#33fe73',
-    7: '#51ffd9',
-    8: '#517dff',
-    9: '#6e51ff',
-    10: '#a851ff',
-    11: '#ff51d9'
+    0: '#bb3333',
+    1: '#ea740c',
+    2: '#f5b342',
+    3: '#f7de3b',
+    4: '#69b43e',
+    5: '#006e1a',
+    6: '#33fe7a',
+    7: '#34ffd3',
+    8: '#3265ff',
+    9: '#7033ff',
+    10: '#d293ff',
+    11: '#ff80b7',
 }
 
 export function Board(props) {
