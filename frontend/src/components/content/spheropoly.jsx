@@ -173,7 +173,7 @@ export function Spheropoly() {
                     <div className="columns">
                         <Start phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
-                            <Board data={response} state={state} />
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ export function Spheropoly() {
                     <div className="columns">
                         <Roll phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
-                            <Board data={response} state={state} />
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@ export function Spheropoly() {
                     <div className="columns">
                         <Tile phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
-                            <Board data={response} state={state} />
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>
                     </div>
                 </div>
@@ -208,7 +208,7 @@ export function Spheropoly() {
                             Under Development
                         </div>
                         <div>
-                            <Board data={response} state={state} />
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>
                     </div>
                 </div>
