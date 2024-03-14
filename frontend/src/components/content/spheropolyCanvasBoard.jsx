@@ -3,10 +3,50 @@ import styled from '@emotion/styled'
 import human from '../../assets/squareSmile.png'
 import sphero from '../../assets/spheroBlackWhite.png'
 
-function Canvas(props) {
-    return (
-        <canvas ref />
-    )
+// Centralized location to keep track of colors rather than having to go in and type all of them myself.
+const TileColors = {
+    0: '#bb3333',
+    1: '#ea740c',
+    2: '#f5b342',
+    3: '#f7de3b',
+    4: '#69b43e',
+    5: '#006e1a',
+    6: '#33fe7a',
+    7: '#34ffd3',
+    8: '#3265ff',
+    9: '#7033ff',
+    10: '#d293ff',
+    11: '#ff80b7',
+}
+
+const playerDrawCoords = {
+    0: { "x": 187, "y": 510 },
+    1: { "x": 412, "y": 435 },
+    2: { "x": 340, "y": 260 },
+    3: { "x": 512, "y": 335 },
+    4: { "x": 438, "y": 110 },
+    5: { "x": 260, "y": 186 },
+    6: { "x": 338, "y": 10 },
+    7: { "x": 115, "y": 90 },
+    8: { "x": 187, "y": 260 },
+    9: { "x": 10, "y": 186 },
+    10: { "x": 87, "y": 410 },
+    11: { "x": 260, "y": 335 }
+}
+
+const spheroDrawCoords = {
+    0: { "x": 187, "y": 440 },
+    1: { "x": 340, "y": 435 },
+    2: { "x": 340, "y": 330 },
+    3: { "x": 442, "y": 335 },
+    4: { "x": 438, "y": 186 },
+    5: { "x": 340, "y": 186 },
+    6: { "x": 340, "y": 90 },
+    7: { "x": 187, "y": 90 },
+    8: { "x": 187, "y": 186 },
+    9: { "x": 87, "y": 186 },
+    10: { "x": 87, "y": 335 },
+    11: { "x": 187, "y": 335 }
 }
 
 const CanvasContainer = styled.div`
@@ -107,72 +147,26 @@ function drawTileText(context, board, tile) {
     context.fillStyle = '#000000'
     switch (board[tile]["owner"]) {
         case -1:
-            context.fillText(board[tile]["name"], spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 10, [200])
+            context.fillText(board[tile]["name"], spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] - 10, [200])
             break
 
         case 0:
-            context.fillText("Unowned", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"], [200])
-            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            context.fillText("Unowned", spheroDrawCoords[tile]["x"] + 15, spheroDrawCoords[tile]["y"] - 5, [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] + 40, [200])
             break
 
         case 1:
-            context.fillText("Human", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 50, [200])
-            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            context.fillText("Human", spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] - 5, [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] + 40, [200])
             break
 
         case 2:
-            context.fillText("Sphero", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 50, [200])
-            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            context.fillText("Sphero", spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] - 5, [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"] + 10, spheroDrawCoords[tile]["y"] + 40, [200])
             break
     }
 
 
-}
-
-// Centralized location to keep track of colors rather than having to go in and type all of them myself.
-const TileColors = {
-    0: '#bb3333',
-    1: '#ea740c',
-    2: '#f5b342',
-    3: '#f7de3b',
-    4: '#69b43e',
-    5: '#006e1a',
-    6: '#33fe7a',
-    7: '#34ffd3',
-    8: '#3265ff',
-    9: '#7033ff',
-    10: '#d293ff',
-    11: '#ff80b7',
-}
-
-const playerDrawCoords = {
-    0: { "x": 187, "y": 510 },
-    1: { "x": 412, "y": 435 },
-    2: { "x": 340, "y": 260 },
-    3: { "x": 512, "y": 335 },
-    4: { "x": 438, "y": 110 },
-    5: { "x": 260, "y": 186 },
-    6: { "x": 338, "y": 10 },
-    7: { "x": 115, "y": 90 },
-    8: { "x": 187, "y": 260 },
-    9: { "x": 10, "y": 186 },
-    10: { "x": 87, "y": 410 },
-    11: { "x": 260, "y": 335 }
-}
-
-const spheroDrawCoords = {
-    0: { "x": 187, "y": 440 },
-    1: { "x": 340, "y": 435 },
-    2: { "x": 340, "y": 330 },
-    3: { "x": 442, "y": 335 },
-    4: { "x": 438, "y": 186 },
-    5: { "x": 340, "y": 186 },
-    6: { "x": 340, "y": 90 },
-    7: { "x": 187, "y": 90 },
-    8: { "x": 187, "y": 186 },
-    9: { "x": 87, "y": 186 },
-    10: { "x": 87, "y": 335 },
-    11: { "x": 187, "y": 335 }
 }
 
 function drawPlayer(context, image, tile) {
@@ -284,6 +278,7 @@ export function Board(props) {
         drawEdge(context, 0, 450, 500)                                                    // Edge
 
         context.font = "15px Georgia"
+        context.textAlign = 'center'
         drawTileText(context, data.board, 0) // Tile 0
         drawTileText(context, data.board, 1) // Tile 1
         drawTileText(context, data.board, 2) // Tile 2
