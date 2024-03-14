@@ -250,6 +250,11 @@ class Spheropoly {
         console.log(this._human.position)
     }
 
+    moveHumanToJail() {
+        this._human.position = 9
+        console.log(this._human.position)
+    }
+
     // Move the robot along the board.
     moveRobot(roll) {
         this._robot.position = (this._robot.position + roll) % 12
@@ -399,7 +404,7 @@ router.get('/status', function (req, res, next) {
 })
 
 router.post('/roll', function (req, res, next) {
-    console.log("  -- req.body:", req.body)
+    console.log("  -- /roll req.body:", req.body)
     if (req.body && req.body.roll) {
         spheropoly.moveHuman(req.body.roll)
         spheropoly.lastAction = "roll"
@@ -414,6 +419,21 @@ router.post('/roll', function (req, res, next) {
 router.post('/confirm', function (req, res, next) {
     spheropoly.lastAction = "confirm"
     res.status(201).send(spheropoly.state)
+})
+
+router.post('/jail', function (req, res, next) {
+    var callbackCount = 0
+    console.log("  -- /jail req.body:", req.body)
+    spheropoly.lastAction = "jail"
+    spheropoly.moveHumanToJail()
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    function complete(msg) {
+        callbackCount++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
+    }
 })
 
 router.post('/buy', function (req, res, next) {
@@ -460,6 +480,7 @@ router.post('/pay', function (req, res, next) {
 })
 
 router.post('/continue', function (req, res, next) {
+    console.log("Calling continue")
     var callbackCount = 0
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
@@ -468,6 +489,21 @@ router.post('/continue', function (req, res, next) {
         console.log("callback Count:", callbackCount, "msg:", msg)
         if (callbackCount >= 2) {
             res.status(201).send(spheropoly.state)
+        }
+    }
+})
+
+router.get('/clear', function (req, res, next) {
+    console.log("Calling continue")
+    function clear(receive, complete) {
+        receive(complete)
+    }
+    clear(req.app.get("awaitReply"), complete)
+    function complete(msg) {
+        callbackCount++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 1) {
+            res.status(201).send({ "msg": msg })
         }
     }
 })

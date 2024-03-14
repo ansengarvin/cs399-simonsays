@@ -8,6 +8,7 @@ import { EmptyBoard } from './emptyBoard'
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
     console.log("== action was called, data:", data)
+    console.log(data.position)
     if (data.phase == "start") {
         return fetch("http://localhost:19931/spheropoly/new",
             {
@@ -43,6 +44,14 @@ export async function action({ request, params }) {
         } else if (data.owner == 2) {
             return fetch(
                 "http://localhost:19931/spheropoly/pay",
+                {
+                    method: "POST"
+                }
+            )
+        } else if (data.position == 3) {
+            console.log("Jailing")
+            return fetch(
+                "http://localhost:19931/spheropoly/jail",
                 {
                     method: "POST"
                 }
@@ -110,6 +119,8 @@ function Tile(props) {
     const [buy, setBuy] = useState(false)
     if (response && response.lastAction && response.lastAction == "tile") {
         setPhase("roll")
+    } else if (response && response.lastAction && response.lastAction == "jail") {
+        setPhase("jail")
     }
     console.log("Owner of this tile is", response.board[String(response.human.position)].owner)
     if (state == "idle") {
@@ -137,6 +148,7 @@ function Tile(props) {
                     <input type="hidden" name="buy" value={buy} />
                     <input type="hidden" name="phase" value={phase} />
                     <input type="hidden" name="owner" value={response.board[String(response.human.position)].owner} />
+                    <input type="hidden" name="position" value={response.human.position} />
                     {response.board[String(response.human.position)].owner == 0
                         && <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>}
                     {response.board[String(response.human.position)].owner == 1
@@ -184,7 +196,44 @@ function Tile(props) {
             </div>
         )
     }
+}
 
+function Jail(props) {
+    const { phase, setPhase, state, response } = props
+    if (response && response.lastAction && response.lastAction == "bribe") {
+        setPhase("roll")
+    } else if (response && response.lastAction && response.lastAction == "jail") {
+        setPhase("jail")
+    }
+    console.log("Owner of this tile is", response.board[String(response.human.position)].owner)
+    if (state == "idle") {
+        return (
+            <div className="controls">
+                <div className="caption">
+                    Your turn!
+                </div>
+                <div className="explanation">
+                    You are in jail.<br />
+                </div>
+                {response.board[String(response.human.position)].owner == 0
+                    && <>This tile is up for auction! You may choose to buy it.</>}
+                <Form method="POST">
+
+                </Form>
+            </div>
+        )
+    } else {
+        return (
+            <div className="controls">
+                <div className="caption">
+                    Please wait for the robot to finish its turn.
+                </div>
+                <div className="explanation">
+                    Press the button to buy or auction.
+                </div>
+            </div>
+        )
+    }
 }
 
 export function Spheropoly() {
@@ -225,6 +274,17 @@ export function Spheropoly() {
                 <div className="content">
                     <div className="columns">
                         <Tile phase={phase} setPhase={setPhase} state={state} response={response} />
+                        <div>
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
+                        </div>
+                    </div>
+                </div>
+            )
+        case "jail":
+            return (
+                <div className="content">
+                    <div className="columns">
+                        <Jail phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
                             {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>

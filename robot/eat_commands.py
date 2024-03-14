@@ -1,5 +1,5 @@
 ﻿from lib.pipeline import eatCommand, eatReply
 
 while True:
-    #eatCommand()
+    # eatCommand()
     eatReply()
