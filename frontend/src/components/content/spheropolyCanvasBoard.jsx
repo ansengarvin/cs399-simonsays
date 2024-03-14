@@ -277,6 +277,8 @@ export function Board(props) {
         drawEdge(context, 0, 350, 500)                                                    // Edge
         drawEdge(context, 0, 450, 500)                                                    // Edge
 
+
+        // Drawing text
         context.font = "15px Georgia"
         context.textAlign = 'center'
         drawTileText(context, data.board, 0) // Tile 0
@@ -293,40 +295,18 @@ export function Board(props) {
         drawTileText(context, data.board, 11) // Tile 10
 
 
+        // Drawing player and sphero icons
         const playerIcon = new Image()
         playerIcon.src = human
         console.log("Before load")
         playerIcon.onload = () => {
-            console.log("onLoad")
-            drawPlayer(context, playerIcon, 0)
-            drawPlayer(context, playerIcon, 1)
-            drawPlayer(context, playerIcon, 2)
-            drawPlayer(context, playerIcon, 3)
-            drawPlayer(context, playerIcon, 4)
-            drawPlayer(context, playerIcon, 5)
-            drawPlayer(context, playerIcon, 6)
-            drawPlayer(context, playerIcon, 7)
-            drawPlayer(context, playerIcon, 8)
-            drawPlayer(context, playerIcon, 9)
-            drawPlayer(context, playerIcon, 10)
-            drawPlayer(context, playerIcon, 11)
+            drawPlayer(context, playerIcon, data.human.position)
         }
 
         const spheroIcon = new Image()
         spheroIcon.src = sphero
         spheroIcon.onload = () => {
-            drawSphero(context, spheroIcon, 0)
-            drawSphero(context, spheroIcon, 1)
-            drawSphero(context, spheroIcon, 2)
-            drawSphero(context, spheroIcon, 3)
-            drawSphero(context, spheroIcon, 4)
-            drawSphero(context, spheroIcon, 5)
-            drawSphero(context, spheroIcon, 6)
-            drawSphero(context, spheroIcon, 7)
-            drawSphero(context, spheroIcon, 8)
-            drawSphero(context, spheroIcon, 9)
-            drawSphero(context, spheroIcon, 10)
-            drawSphero(context, spheroIcon, 11)
+            drawSphero(context, spheroIcon, data.robot.position)
         }
 
 
