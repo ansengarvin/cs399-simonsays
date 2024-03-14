@@ -7,8 +7,8 @@ module.exports = router
 class Tile {
     constructor(name, cost) {
         this._owner = 0,
-        this._name = name,
-        this._cost = cost
+            this._name = name,
+            this._cost = cost
     }
 
     get tile() {
@@ -56,7 +56,7 @@ class Player {
         return this._funds
     }
 
-    set lastRoll(roll){
+    set lastRoll(roll) {
         this._lastRoll = roll
     }
 
@@ -87,24 +87,25 @@ class Player {
 }
 
 class Spheropoly {
-    constructor () {
+    constructor() {
         this._board = [
             new Tile("Go", null),
-            new Tile("Tile 2", 75),
-            new Tile("Tile 3", 100),
-            new Tile("Tile 4", 125),
-            new Tile("Tile 5", 150),
-            new Tile("Tile 6", 175),
+            new Tile("Tile 1", 75),
+            new Tile("Tile 2", 100),
+            new Tile("Go To Jail", null),
+            new Tile("Tile 4", 150),
+            new Tile("Tile 5", 175),
+            new Tile("Lake", null),
+            new Tile("Tile 7", 225),
+            new Tile("Tile 8", 250),
             new Tile("Jail", null),
-            new Tile("Tile 8", 225),
-            new Tile("Tile 9", 250),
-            new Tile("The Wilds", null),
-            new Tile("Tile 11", 300),
-            new Tile("Tile 12", 400)
+            new Tile("Tile 10", 300),
+            new Tile("Tile 11", 400)
         ]
         this._board[0].owner = -1
+        this._board[3].owner = -1
         this._board[6].owner = -1
-        this._board[8].owner = -1
+        this._board[9].owner = -1
         this._robot = new Player("robot")
         this._human = new Player("human")
         this._auctionTile = null
@@ -115,19 +116,20 @@ class Spheropoly {
     reset() {
         this._board = [
             new Tile("Go", null),
-            new Tile("Tile 2", 75),
-            new Tile("Tile 3", 100),
-            new Tile("Tile 4", 125),
-            new Tile("Tile 5", 150),
-            new Tile("Tile 6", 175),
+            new Tile("Tile 1", 75),
+            new Tile("Tile 2", 100),
+            new Tile("Go To Jail", null),
+            new Tile("Tile 4", 150),
+            new Tile("Tile 5", 175),
+            new Tile("Lake", null),
+            new Tile("Tile 7", 225),
+            new Tile("Tile 8", 250),
             new Tile("Jail", null),
-            new Tile("Tile 8", 225),
-            new Tile("Tile 9", 250),
-            new Tile("The Wilds", null),
-            new Tile("Tile 11", 300),
-            new Tile("Tile 12", 400)
+            new Tile("Tile 10", 300),
+            new Tile("Tile 11", 400)
         ]
         this._board[0].owner = -1
+        this._board[3].owner = -1
         this._board[6].owner = -1
         this._board[9].owner = -1
         this._robot = new Player("robot")
@@ -175,7 +177,7 @@ class Spheropoly {
             "summary": this._summary,
             "robot": this._robot.info,
             "human": this._human.info,
-            board: this.board["board"]      
+            board: this.board["board"]
         }
     }
 
@@ -208,12 +210,12 @@ class Spheropoly {
     }
 
     // Human player sends the tile they're standing on to auction.
-    auction(){
+    auction() {
         this._auctionTile = this._human.position
     }
 
     // Human player pays rent on a tile that the Sphero owns.
-    pay(){
+    pay() {
         transaction = this._board[this._human.position].cost
         this._human.takeMoney(transaction)
         this._robot.giveMoney(transaction)
@@ -255,7 +257,7 @@ class Spheropoly {
 
     // Checks who owns the tile the robot is standing on, and takes action accordingly.
     roboTile() {
-        switch(this._robot.position) {
+        switch (this._robot.position) {
             case 0:
                 console.log("GO")
                 break
@@ -285,14 +287,14 @@ class Spheropoly {
                             console.log("The robot lost the game! TODO: Actually end the game here.")
                             this._summary = this._summary + " The robot landed on your tile and couldn't afford it. They lost."
                         }
-                        break     
+                        break
                     case 2:
                         this._summary = this._summary + " The robot landed on their own tile."
                         break
                 }
         }
         console.log(this._board[this._robot.position])
-        
+
     }
 
     // The robot's turn.
@@ -314,10 +316,10 @@ class Spheropoly {
 
 const spheropoly = new Spheropoly()
 
-router.post('/', function(req, res, next){
+router.post('/', function (req, res, next) {
     console.log("  -- req.body:", req.body)
     if (req.body && req.body.command) {
-            res.status(201).send({msg: "Welcome to Spheropoly!"})
+        res.status(201).send({ msg: "Welcome to Spheropoly!" })
     } else {
         res.status(400).send({
             err: "Request needs a body with command."
@@ -325,11 +327,11 @@ router.post('/', function(req, res, next){
     }
 })
 
-router.get('/status', function(req, res, next){
+router.get('/status', function (req, res, next) {
     res.status(200).send(spheropoly.state)
 })
 
-router.post('/roll', function(req, res, next){
+router.post('/roll', function (req, res, next) {
     console.log("  -- req.body:", req.body)
     if (req.body && req.body.roll) {
         spheropoly.moveHuman(req.body.roll)
@@ -342,19 +344,19 @@ router.post('/roll', function(req, res, next){
     }
 })
 
-router.post('/confirm', function(req, res, next) {
+router.post('/confirm', function (req, res, next) {
     spheropoly.lastAction = "confirm"
     res.status(201).send(spheropoly.state)
 })
 
-router.post('/buy', function(req, res, next) {
+router.post('/buy', function (req, res, next) {
     var callbackCount = 0
     spheropoly.buy()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
 
     function complete(msg) {
-        callbackCount ++
+        callbackCount++
         console.log("callback Count:", callbackCount, "msg:", msg)
         if (callbackCount >= 2) {
             res.status(201).send(spheropoly.state)
@@ -362,13 +364,13 @@ router.post('/buy', function(req, res, next) {
     }
 })
 
-router.post('/auction', function(req, res, next){
+router.post('/auction', function (req, res, next) {
     var callbackCount = 0
     spheropoly.auction()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {
-        callbackCount ++
+        callbackCount++
         console.log("callback Count:", callbackCount, "msg:", msg)
         if (callbackCount >= 2) {
             res.status(201).send(spheropoly.state)
@@ -376,13 +378,13 @@ router.post('/auction', function(req, res, next){
     }
 })
 
-router.post('/pay', function(req, res, next){
+router.post('/pay', function (req, res, next) {
     var callbackCount = 0
     spheropoly.pay()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {
-        callbackCount ++
+        callbackCount++
         console.log("callback Count:", callbackCount, "msg:", msg)
         if (callbackCount >= 2) {
             res.status(201).send(spheropoly.state)
@@ -390,12 +392,12 @@ router.post('/pay', function(req, res, next){
     }
 })
 
-router.post('/continue', function(req, res, next){
+router.post('/continue', function (req, res, next) {
     var callbackCount = 0
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {
-        callbackCount ++
+        callbackCount++
         console.log("callback Count:", callbackCount, "msg:", msg)
         if (callbackCount >= 2) {
             res.status(201).send(spheropoly.state)
@@ -404,7 +406,7 @@ router.post('/continue', function(req, res, next){
 })
 
 
-router.post('/new', function(req, res, next){
+router.post('/new', function (req, res, next) {
     spheropoly.reset()
     spheropoly.lastAction = "start"
     res.status(200).send(spheropoly.state)
