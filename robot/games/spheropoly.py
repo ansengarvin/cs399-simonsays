@@ -85,5 +85,8 @@ def spheropoly(droid: SpheroEduAPI):
                 state.set_position(9)
                 droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
                 droid.play_matrix_animation(3)  # Play red frowny
+            else:
+                droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
+                droid.play_matrix_animation(2)
 
         sendResponse("Done")
