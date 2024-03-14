@@ -122,26 +122,46 @@ function Tile(props) {
                     You rolled a {response.human.lastRoll}. Please move your piece, then choose the following.
                 </div>
                 <div className="buttons">
-                    {response.board[String(response.human.position)].owner == 0 && (buy == true
-                        ? <button className="command green selected">Buy</button>
-                        : <button className="command green" onClick={() => { setBuy(true) }}>Buy</button>)
-                    }
-                    {response.board[String(response.human.position)].owner == 0 && (buy == false
-                        ? <button className="command red selected">Auction</button>
-                        : <button className="command red" onClick={() => { setBuy(false) }}>Auction</button>)
-                    }
-                    {response.board[String(response.human.position)].owner == 1
-                        && <>You landed on your own tile! Press the button to move on.</>}
-                    {response.board[String(response.human.position)].owner == 2
-                        && <>Oh no! You landed on the robot's tile! Press the button to pay them!</>}
-                    {response.board[String(response.human.position)].owner == -1
-                        && <>You landed on federal property. This does nothing for now.</>}
+                    {response.board[String(response.human.position)].owner == 0
+                        && (buy == true
+                            ? <button className="command green selected">Buy</button>
+                            : <button className="command green" onClick={() => { setBuy(true) }}>Buy</button>)}
+                    {response.board[String(response.human.position)].owner == 0
+                        && (buy == false
+                            ? <button className="command red selected">Auction</button>
+                            : <button className="command red" onClick={() => { setBuy(false) }}>Auction</button>)}
                 </div>
                 <Form method="POST">
                     <input type="hidden" name="buy" value={buy} />
                     <input type="hidden" name="phase" value={phase} />
                     <input type="hidden" name="owner" value={response.board[String(response.human.position)].owner} />
-                    <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                    {response.board[String(response.human.position)].owner == 0
+                        && <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>}
+                    {response.board[String(response.human.position)].owner == 1
+                        && <>
+                            You landed on your own tile! Press the button to move on.<br />
+                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                        </>}
+                    {response.board[String(response.human.position)].owner == 2
+                        && <>
+                            Oh no! You landed on the robot's tile! Press the button to pay them!<br />
+                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                        </>}
+                    {response.human.position == 3
+                        && <>
+                            You were caught trespassing! Please move your piece to jail, then press the button!<br />
+                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                        </>}
+                    {response.human.position == 6
+                        && <>
+                            You arrived at the lake! Enjoy the view, then press the button!<br />
+                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                        </>}
+                    {response.human.position == 9
+                        && <>
+                            You're at jail, but thankfully not inside. Press the button to move on.<br />
+                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                        </>}
                 </Form>
             </div>
         )
