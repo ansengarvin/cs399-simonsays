@@ -150,7 +150,7 @@ function Tile(props) {
                     {response.human.position == 3
                         && <>
                             You were caught trespassing! Please move your piece to jail, then press the button!<br />
-                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                            <button className="submit"><i class="fa-solid fa-handcuffs fa-2xl"></i></button>
                         </>}
                     {response.human.position == 6
                         && <>
