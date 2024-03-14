@@ -105,6 +105,14 @@ class Player {
     giveMoney(transaction) {
         this._funds += transaction
     }
+
+    insufficientFunds(cost) {
+        return this._funds < cost
+    }
+
+    jailInescapable() {
+        return (this._jailed && this._funds < 200 && this._propertyCount <= 0)
+    }
 }
 
 class Spheropoly {
@@ -132,6 +140,8 @@ class Spheropoly {
         this._auctionTile = null
         this._lastAction = "start"
         this._summary = ""
+        this._winner = null
+        this._winReason = ""
     }
 
     reset() {
@@ -158,6 +168,8 @@ class Spheropoly {
         this._auctionTile = null
         this._lastAction = "start"
         this._summary = ""
+        this._winner = null
+        this._winReason = ""
     }
 
     get board() {
@@ -195,6 +207,8 @@ class Spheropoly {
     get state() {
         return {
             "lastAction": this._lastAction,
+            "winner": this._winner,
+            "winReason": this._winReason,
             "summary": this._summary,
             "robot": this._robot.info,
             "human": this._human.info,
@@ -265,6 +279,33 @@ class Spheropoly {
     moveRobot(roll) {
         this._robot.position = (this._robot.position + roll) % 12
         this._summary = this._summary + "The robot rolled a " + roll + "."
+    }
+
+    checkHumanLoss() {
+        if (this._board[this._human.position].owner == 2 && this._human.insufficientFunds(this._board[this._human.position].cost)) {
+            this._winner = "Robot"
+            this._winReason = "The Sphero landed on your tile and could not pay you."
+        }
+
+        // The human loses if they land in jail, have no funds, and have
+        if (this._human.jailInescapable()) {
+            this._winner = "Robot"
+            this._winReason = "The Sphero landed in jail, but had no properties and no way to get money."
+        }
+    }
+
+    checkRobotLoss() {
+        if (this._board[this._robot.position].owner == 1 && this._robot.insufficientFunds(this._board[this._human.position].cost)) {
+            this._winner = "Human"
+            this._winReason = "You landed on the Sphero's tile but could not pay them."
+            return true
+        }
+        // The human loses if they land in jail, have no funds, and have
+        if (this._robot.jailInescapable()) {
+            this._winner = "Human"
+            this._winReason = "You landed in jail, but don't have any properties or any way to get money."
+            return true
+        }
     }
 
     roboJailCheck() {
@@ -389,6 +430,7 @@ class Spheropoly {
         }
         command(orders, complete)
         receive(complete)
+
     }
 }
 
@@ -414,6 +456,7 @@ router.post('/roll', function (req, res, next) {
     if (req.body && req.body.roll) {
         spheropoly.moveHuman(req.body.roll)
         spheropoly.lastAction = "roll"
+        spheropoly.checkHumanLoss()
         res.status(201).send(spheropoly.state)
     } else {
         res.status(400).send({

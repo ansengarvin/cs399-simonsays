@@ -319,6 +319,9 @@ export function Board(props) {
                 Your Money: ${data.human.funds}<br />
                 Sphero's Money: ${data.robot.funds}<br />
                 {data.summary != "" && <>{data.summary}</>}
+                {data.winner
+                    ? <>{data.winner} {data.winReason}</>
+                    : <>No Winner</>}
             </CanvasContainer>
         </div>
     )
