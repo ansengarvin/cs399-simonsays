@@ -252,7 +252,13 @@ class Spheropoly {
 
     moveHumanToJail() {
         this._human.position = 9
+        this._human.jailed = true
         console.log(this._human.position)
+    }
+
+    freeHumanFromJail() {
+        this._human.jailed = false
+        this._human.takeMoney(200)
     }
 
     // Move the robot along the board.
@@ -434,6 +440,12 @@ router.post('/jail', function (req, res, next) {
             res.status(201).send(spheropoly.state)
         }
     }
+})
+
+router.post('/bribe', function (req, res, next) {
+    spheropoly.lastAction = "bribe"
+    spheropoly.freeHumanFromJail()
+    res.status(201).send(spheropoly.state)
 })
 
 router.post('/buy', function (req, res, next) {
