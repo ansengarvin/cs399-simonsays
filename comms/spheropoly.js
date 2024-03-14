@@ -403,6 +403,8 @@ class Spheropoly {
                         } else {
                             console.log("The robot lost the game! TODO: Actually end the game here.")
                             this._summary = this._summary + " The robot landed on your tile and couldn't afford it. They lost."
+                            this._winner = "Human"
+                            this._winReason = "The Sphero landed on your tile and could not pay you."
                         }
                         break
                     case 2:
