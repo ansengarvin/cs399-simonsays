@@ -42,6 +42,9 @@ class Player {
         this._funds = 1000
         this._position = 0
         this._lastRoll = null
+        this._jailed = false
+        this._properties = []
+        this._propertyCount = 0
     }
 
     set position(pos) {
@@ -68,8 +71,26 @@ class Player {
         return {
             "funds": this._funds,
             "position": this._position,
-            "lastRoll": this._lastRoll
+            "lastRoll": this._lastRoll,
+            "jailed": this._jailed
         }
+    }
+
+    get jailed() {
+        return this._jailed
+    }
+
+    set jailed(status) {
+        this._jailed = status
+    }
+
+    get propertyCount() {
+        return this._propertyCount
+    }
+
+    addProperty(tile) {
+        this._properties.push(tile)
+        this._propertyCount += 1
     }
 
     reset() {
@@ -207,6 +228,7 @@ class Spheropoly {
     buy() {
         this._board[this._human.position].owner = 1
         this._human.takeMoney(this._board[this._human.position].cost)
+        this._human.addProperty(this._human.position)
     }
 
     // Human player sends the tile they're standing on to auction.
@@ -216,7 +238,7 @@ class Spheropoly {
 
     // Human player pays rent on a tile that the Sphero owns.
     pay() {
-        transaction = this._board[this._human.position].cost
+        const transaction = this._board[this._human.position].cost
         this._human.takeMoney(transaction)
         this._robot.giveMoney(transaction)
     }
@@ -231,10 +253,31 @@ class Spheropoly {
     // Move the robot along the board.
     moveRobot(roll) {
         this._robot.position = (this._robot.position + roll) % 12
-        this._summary = "The robot rolled a " + roll + "."
+        this._summary = this._summary + "The robot rolled a " + roll + "."
+    }
+
+    roboJailCheck() {
+        if (!this._robot._jailed) {
+            return true
+        } else {
+            if (this._robot._funds >= 200) {
+                this._robot.takeMoney(200)
+                this._summary = "The robot was able to bribe their way out of jail with $200."
+                this._robot.jailed = false
+                return true
+            } else {
+                if (this._robot.propertyCount == 0) {
+                    this._summary = "The robot can't afford to leave jail and has no property. Game over!"
+                } else {
+                    this._summary = "The robot cannot afford to bribe their way out of jail and must remain."
+                }
+                return false
+            }
+        }
     }
 
     // Checks if there's a property on auction for the robot to buy, and buys it if there is.
+    // NOTE: This function is not used in the game.
     roboAuction() {
         if (this._auctionTile) {
             if (this._robot.funds >= this.board[this._auctionTile].cost) {
@@ -259,8 +302,26 @@ class Spheropoly {
     roboTile() {
         switch (this._robot.position) {
             case 0:
-                console.log("GO")
+                this._robot.giveMoney(200)
+                this._summary = this._summary + "The robot landed on GO and got $200."
                 break
+            case 3:
+                // Robot navigates to jail.
+                console.log("Robot Go To Jail")
+                this._robot.position = 9
+                this._robot.jailed = true
+                this._summary = this._summary + "The robot was caught trespassing and had to go to jail."
+                break
+            case 6:
+                // Robot does nothing.
+                this._summary = this._summary + "The robot arrived at the lake and took a moment to relax."
+                break
+            case 9:
+                // If robot starts standing on jail, do nothing.
+                // Robot jailed action is handled at the start of the turn, not here.
+                this._summary = this._summary + "The robot stood outside of the jail for a while."
+                break
+
             default:
                 const currentTile = this._board[this._robot.position]
                 switch (currentTile.owner) {
@@ -271,11 +332,11 @@ class Spheropoly {
                         if (this._robot.funds >= currentTile.cost) {
                             this._robot.takeMoney(currentTile.cost)
                             currentTile.owner = 2
+                            this._robot.addProperty(this._robot.position)
                             this._summary = this._summary + " The robot bought the property it landed on."
                         } else {
-                            console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
-                            this._auctionTile = this._robot.position
-                            this._summary = this._summary + " The robot could not afford the property it landed on and it was sent to auction."
+                            console.log("Robot cannot afford to buy the property they landed on.")
+                            this._summary = this._summary + " The robot could not afford the property it landed on, so it went back up on the market."
                         }
                         break
                     case 1: // Owned by the player. The robot must give them money or lose.
@@ -300,14 +361,20 @@ class Spheropoly {
     // The robot's turn.
     roboTurn(command, receive, complete) {
         var roll = (Math.floor(Math.random() * 6)) + 1
-        console.log("We got a")
+        this._summary = ""
+        if (!this.roboJailCheck()) {
+            complete()
+            complete()
+            return
+        }
+        console.log("Robot got a", roll)
         this._robot.lastRoll = roll
         this.moveRobot(roll)
-        this.roboAuction()
         this.roboTile()
         const orders = {
             "roll": roll,
-            "position": this._robot.position
+            "position": this._robot.position,
+            "jailed": this._robot.jailed
         }
         command(orders, complete)
         receive(complete)
@@ -366,7 +433,7 @@ router.post('/buy', function (req, res, next) {
 
 router.post('/auction', function (req, res, next) {
     var callbackCount = 0
-    spheropoly.auction()
+    //spheropoly.auction()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {

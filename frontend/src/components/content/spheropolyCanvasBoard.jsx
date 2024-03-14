@@ -315,7 +315,10 @@ export function Board(props) {
     return (
         <div>
             <CanvasContainer>
-                <canvas ref={canvasRef} />
+                <canvas ref={canvasRef} /><br />
+                Your Money: ${data.human.funds}<br />
+                Sphero's Money: ${data.robot.funds}<br />
+                {data.summary != "" && <>{data.summary}</>}
             </CanvasContainer>
         </div>
     )
