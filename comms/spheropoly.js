@@ -257,12 +257,13 @@ class Spheropoly {
     }
 
     roboJailCheck() {
-        if (this._robot._jailed == false) {
+        if (!this._robot._jailed) {
             return true
         } else {
             if (this._robot._funds >= 200) {
                 this._robot.takeMoney(200)
                 this._summary = "The robot was able to bribe their way out of jail with $200."
+                this._robot.jailed = false
                 return true
             } else {
                 if (this._robot.propertyCount == 0) {
@@ -273,7 +274,6 @@ class Spheropoly {
                 return false
             }
         }
-
     }
 
     // Checks if there's a property on auction for the robot to buy, and buys it if there is.
