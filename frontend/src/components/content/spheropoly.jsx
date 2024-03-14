@@ -166,9 +166,12 @@ function Tile(props) {
                     You rolled a {response.human.lastRoll}. Please move your piece, then choose the following.
                 </div>
                 {response.board[String(response.human.position)].owner == 0
-                    && <>This tile is up for auction! You may choose to buy it.</>}
+                    && <>
+                        This tile is up for auction!<br />
+                        Cost: ${response.board[String(response.human.position)].cost} | Funds: ${response.human.funds}
+                    </>}
                 <div className="buttons">
-                    {response.board[String(response.human.position)].owner == 0
+                    {response.board[String(response.human.position)].owner == 0 && (response.human.funds >= response.board[String(response.human.position)].cost)
                         && (buy == true
                             ? <button className="command green selected"><i class="fa-solid fa-house-circle-check fa-2xl"></i></button>
                             : <button className="command green" onClick={() => { setBuy(true) }}><i class="fa-solid fa-house-circle-check fa-2xl"></i></button>)}
@@ -348,12 +351,12 @@ export function Spheropoly() {
             return (
                 <div className="content">
                     <div className="columns">
-                        <div>
+                        <div className="controls">
                             <div className="caption">
                                 The game has ended!
                             </div>
                             <div className="explanation">
-                                Winner: {response.winner}
+                                Winner: {response.winner}<br />
                                 Reason: {response.winReason}
                             </div>
                         </div>
