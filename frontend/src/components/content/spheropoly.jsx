@@ -8,6 +8,7 @@ import { EmptyBoard } from './emptyBoard'
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
     console.log("== action was called, data:", data)
+    console.log("buy:", data.buy)
     if (data.phase == "start") {
         return fetch("http://localhost:19931/spheropoly/new",
             {
@@ -25,7 +26,8 @@ export async function action({ request, params }) {
         )
     } else if (data.phase == "tile") {
         if (data.owner == 0) {
-            if (data.buy) {
+            if (data.buy == "true") {
+                console.log("Buying")
                 return fetch(
                     "http://localhost:19931/spheropoly/buy",
                     {
@@ -33,6 +35,7 @@ export async function action({ request, params }) {
                     }
                 )
             } else {
+                console.log("Not buying")
                 return fetch(
                     "http://localhost:19931/spheropoly/auction",
                     {
@@ -47,6 +50,14 @@ export async function action({ request, params }) {
                     method: "POST"
                 }
             )
+        } else if (data.position == 3) {
+            console.log("Jailing")
+            return fetch(
+                "http://localhost:19931/spheropoly/jail",
+                {
+                    method: "POST"
+                }
+            )
         } else {
             return fetch(
                 "http://localhost:19931/spheropoly/continue",
@@ -55,6 +66,23 @@ export async function action({ request, params }) {
                 }
             )
         }
+    } else if (data.phase == "jail") {
+        if (data.funds >= 200) {
+            return fetch(
+                "http://localhost:19931/spheropoly/bribe",
+                {
+                    method: "POST"
+                }
+            )
+        } else {
+            return fetch(
+                "http://localhost:19931/spheropoly/jail",
+                {
+                    method: "POST"
+                }
+            )
+        }
+
     } else {
         console.log("No phase selected.")
         return null
@@ -110,6 +138,8 @@ function Tile(props) {
     const [buy, setBuy] = useState(false)
     if (response && response.lastAction && response.lastAction == "tile") {
         setPhase("roll")
+    } else if (response && response.lastAction && response.lastAction == "jail") {
+        setPhase("jail")
     }
     console.log("Owner of this tile is", response.board[String(response.human.position)].owner)
     if (state == "idle") {
@@ -137,36 +167,37 @@ function Tile(props) {
                     <input type="hidden" name="buy" value={buy} />
                     <input type="hidden" name="phase" value={phase} />
                     <input type="hidden" name="owner" value={response.board[String(response.human.position)].owner} />
+                    <input type="hidden" name="position" value={response.human.position} />
                     {response.board[String(response.human.position)].owner == 0
                         && <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>}
                     {response.board[String(response.human.position)].owner == 1
                         && <>
-                            You landed on your own tile! Press the button to move on.<br />
-                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                            <div className="explanation">You landed on your own tile! Press the button to move on.</div>
+                            <button className="submit"><i class="fa-solid fa-person-walking fa-2xl"></i></button>
                         </>}
                     {response.board[String(response.human.position)].owner == 2
                         && <>
-                            Oh no! You landed on the robot's tile! Press the button to pay them!<br />
-                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                            <div className="explanation">Oh no! You landed on the robot's tile! Press the button to pay them ${response.board[String(response.human.position)].cost}!</div>
+                            <button className="submit"><i class="fa-solid fa-hand-holding-dollar fa-2xl"></i></button>
                         </>}
                     {response.human.position == 0
                         && <>
-                            You have landed on GO! Press the button to get paid!<br />
-                            <button className="submit"><i class="fa-solid fa-money-bill fa-2xl"></i></button>
+                            <div className="explanation">You have landed on GO! Press the button to get paid $200!</div>
+                            <button className="submit"><i class="fa-solid fa-coins fa-2xl"></i></button>
                         </>}
                     {response.human.position == 3
                         && <>
-                            You were caught trespassing! Please move your piece to jail, then press the button!<br />
+                            <div className="explanation">You were caught trespassing! Please move your piece to jail, then press the button!</div>
                             <button className="submit"><i class="fa-solid fa-handcuffs fa-2xl"></i></button>
                         </>}
                     {response.human.position == 6
                         && <>
-                            You arrived at the lake! Enjoy the view, then press the button!<br />
+                            <div className="explanation">You arrived at the lake! Enjoy the view, then press the button!</div>
                             <button className="submit"><i class="fa-solid fa-water fa-2xl"></i></button>
                         </>}
                     {response.human.position == 9
                         && <>
-                            You're at jail, but thankfully not inside. Press the button to move on.<br />
+                            <div className="explanation">You're at jail, but thankfully not inside. Press the button to move on.</div>
                             <button className="submit"><i class="fa-solid fa-person-running fa-2xl"></i></button>
                         </>}
                 </Form>
@@ -184,7 +215,64 @@ function Tile(props) {
             </div>
         )
     }
+}
 
+function Jail(props) {
+    const { phase, setPhase, state, response } = props
+    if (response && response.lastAction && response.lastAction == "bribe") {
+        setPhase("roll")
+    } else if (response && response.lastAction && response.lastAction == "jail") {
+        setPhase("jail")
+    }
+    console.log("Owner of this tile is", response.board[String(response.human.position)].owner)
+    if (state == "idle") {
+        return (
+            <div className="controls">
+                <div className="caption">
+                    Your turn!
+                </div>
+                <div className="explanation">
+                    You are in jail.<br />
+                </div>
+                {response.board[String(response.human.position)].owner == 0
+                    && <>This tile is up for auction! You may choose to buy it.</>}
+                <Form method="POST">
+                    <input type="hidden" name="phase" value={phase} />
+                    <input type="hidden" name="owner" value={response.board[String(response.human.position)].owner} />
+                    <input type="hidden" name="human" value={response.human.position} />
+                    <input type="hidden" name="jailed" value={response.human.jailed} />
+                    <input type="hidden" name="funds" value={response.human.funds} />
+                    {response.human.funds >= 200
+                        ? <>
+                            <div className="explanation">
+                                You have enough money to bribe your way out of jail!<br />
+                                Press the button to pay them $200 so you can get out.
+                            </div>
+                            <button className="submit"><i class="fa-solid fa-sack-dollar fa-2xl"></i></button>
+                        </>
+                        : <>
+                            <div className="explanation">
+                                You don't have enough money to bribe your way out of jail<br />
+                                If you get lucky, your opponent might pay you rent.
+                            </div>
+                            <button className="submit"><i class="fa-solid fa-bed fa-2xl"></i></button>
+                        </>
+                    }
+                </Form>
+            </div>
+        )
+    } else {
+        return (
+            <div className="controls">
+                <div className="caption">
+                    Please wait for the robot to finish its turn.
+                </div>
+                <div className="explanation">
+                    Press the button to buy or auction.
+                </div>
+            </div>
+        )
+    }
 }
 
 export function Spheropoly() {
@@ -225,6 +313,17 @@ export function Spheropoly() {
                 <div className="content">
                     <div className="columns">
                         <Tile phase={phase} setPhase={setPhase} state={state} response={response} />
+                        <div>
+                            {state == "idle" && response && response.board && <Board data={response} state={state} />}
+                        </div>
+                    </div>
+                </div>
+            )
+        case "jail":
+            return (
+                <div className="content">
+                    <div className="columns">
+                        <Jail phase={phase} setPhase={setPhase} state={state} response={response} />
                         <div>
                             {state == "idle" && response && response.board && <Board data={response} state={state} />}
                         </div>
