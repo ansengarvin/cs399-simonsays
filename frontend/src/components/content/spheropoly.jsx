@@ -14,7 +14,7 @@ export async function action({ request, params }) {
                 method: "POST"
             })
     } else if (data.phase == "roll") {
-        var roll = Math.floor(Math.random() * 6)
+        var roll = Math.floor(Math.random() * 6) + 1
         return fetch(
             "http://localhost:19931/spheropoly/roll",
             {
