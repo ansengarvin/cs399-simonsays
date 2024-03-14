@@ -103,10 +103,10 @@ function drawPlayerPod(context, orientation, color, x, y) {
     }
 }
 
-function drawText(context, text, x, y) {
+function drawText(context, text, tile) {
     context.fillStyle = '#000000'
 
-    context.fillText(text, x, y, [200])
+    context.fillText(text, textDrawCoords[tile]["x"], textDrawCoords[tile]["y"], [200])
 }
 
 // Centralized location to keep track of colors rather than having to go in and type all of them myself.
@@ -123,6 +123,21 @@ const TileColors = {
     9: '#7033ff',
     10: '#d293ff',
     11: '#ff80b7',
+}
+
+const textDrawCoords = {
+    0: { "x": 187, "y": 440 },
+    1: { "x": 340, "y": 435 },
+    2: { "x": 340, "y": 330 },
+    3: { "x": 442, "y": 335 },
+    4: { "x": 438, "y": 186 },
+    5: { "x": 340, "y": 186 },
+    6: { "x": 340, "y": 90 },
+    7: { "x": 187, "y": 90 },
+    8: { "x": 187, "y": 186 },
+    9: { "x": 87, "y": 186 },
+    10: { "x": 87, "y": 335 },
+    11: { "x": 187, "y": 335 }
 }
 
 const playerDrawCoords = {
@@ -264,18 +279,18 @@ export function Board(props) {
         drawEdge(context, 0, 450, 500)                                                    // Edge
 
         context.font = "15px Georgia"
-        drawText(context, data.board["0"]["name"], 200, 450) // Tile 0
-        drawText(context, ("$" + data.board["1"]["cost"]), 350, 450) // Tile 1
-        drawText(context, ("$" + data.board["2"]["cost"]), 350, 350) // Tile 2
-        drawText(context, data.board["3"]["name"], 450, 350) // Tile 3
-        drawText(context, ("$" + data.board["4"]["cost"]), 450, 200) // Tile 4
-        drawText(context, ("$" + data.board["5"]["cost"]), 350, 200) // Tile 5
-        drawText(context, data.board["6"]["name"], 350, 100) // Tile 6
-        drawText(context, ("$" + data.board["7"]["cost"]), 200, 100) // Tile 7
-        drawText(context, ("$" + data.board["8"]["cost"]), 200, 200) // Tile 8
-        drawText(context, data.board["9"]["name"], 100, 200) // Tile 9
-        drawText(context, ("$" + data.board["10"]["cost"]), 100, 350) // Tile 10
-        drawText(context, ("$" + data.board["11"]["cost"]), 200, 350) // Tile 10
+        drawText(context, data.board["0"]["name"], 0) // Tile 0
+        drawText(context, ("$" + data.board["1"]["cost"]), 1) // Tile 1
+        drawText(context, ("$" + data.board["2"]["cost"]), 2) // Tile 2
+        drawText(context, data.board["3"]["name"], 3) // Tile 3
+        drawText(context, ("$" + data.board["4"]["cost"]), 4) // Tile 4
+        drawText(context, ("$" + data.board["5"]["cost"]), 5) // Tile 5
+        drawText(context, data.board["6"]["name"], 6) // Tile 6
+        drawText(context, ("$" + data.board["7"]["cost"]), 7) // Tile 7
+        drawText(context, ("$" + data.board["8"]["cost"]), 8) // Tile 8
+        drawText(context, data.board["9"]["name"], 9) // Tile 9
+        drawText(context, ("$" + data.board["10"]["cost"]), 10) // Tile 10
+        drawText(context, ("$" + data.board["11"]["cost"]), 11) // Tile 10
 
 
         const playerIcon = new Image()
