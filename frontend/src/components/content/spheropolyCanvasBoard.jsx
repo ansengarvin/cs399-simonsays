@@ -103,8 +103,14 @@ function drawPlayerPod(context, orientation, color, x, y) {
     }
 }
 
-function drawText(context, text, tile) {
+function drawTileText(context, board, tile) {
     context.fillStyle = '#000000'
+    var text = ""
+    if (tile == 0 || tile == 3 || tile == 6 || tile == 9) {
+        text = board[tile]["name"]
+    } else {
+        text = "$" + board[tile]["cost"]
+    }
 
     context.fillText(text, textDrawCoords[tile]["x"], textDrawCoords[tile]["y"], [200])
 }
@@ -279,18 +285,18 @@ export function Board(props) {
         drawEdge(context, 0, 450, 500)                                                    // Edge
 
         context.font = "15px Georgia"
-        drawText(context, data.board["0"]["name"], 0) // Tile 0
-        drawText(context, ("$" + data.board["1"]["cost"]), 1) // Tile 1
-        drawText(context, ("$" + data.board["2"]["cost"]), 2) // Tile 2
-        drawText(context, data.board["3"]["name"], 3) // Tile 3
-        drawText(context, ("$" + data.board["4"]["cost"]), 4) // Tile 4
-        drawText(context, ("$" + data.board["5"]["cost"]), 5) // Tile 5
-        drawText(context, data.board["6"]["name"], 6) // Tile 6
-        drawText(context, ("$" + data.board["7"]["cost"]), 7) // Tile 7
-        drawText(context, ("$" + data.board["8"]["cost"]), 8) // Tile 8
-        drawText(context, data.board["9"]["name"], 9) // Tile 9
-        drawText(context, ("$" + data.board["10"]["cost"]), 10) // Tile 10
-        drawText(context, ("$" + data.board["11"]["cost"]), 11) // Tile 10
+        drawTileText(context, data.board, 0) // Tile 0
+        drawTileText(context, data.board, 1) // Tile 1
+        drawTileText(context, data.board, 2) // Tile 2
+        drawTileText(context, data.board, 3) // Tile 3
+        drawTileText(context, data.board, 4) // Tile 4
+        drawTileText(context, data.board, 5) // Tile 5
+        drawTileText(context, data.board, 6) // Tile 6
+        drawTileText(context, data.board, 7) // Tile 7
+        drawTileText(context, data.board, 8) // Tile 8
+        drawTileText(context, data.board, 9) // Tile 9
+        drawTileText(context, data.board, 10) // Tile 10
+        drawTileText(context, data.board, 11) // Tile 10
 
 
         const playerIcon = new Image()
