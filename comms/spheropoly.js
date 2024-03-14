@@ -111,7 +111,7 @@ class Player {
     }
 
     jailInescapable() {
-        return (this._jailed && this._funds < 200 && this._propertyCount <= 0)
+        return ((this._jailed || this._position == 3) && this._funds < 200 && this._propertyCount <= 0)
     }
 }
 
@@ -299,7 +299,7 @@ class Spheropoly {
     }
 
     checkRobotLoss() {
-        if (this._board[this._robot.position].owner == 1 && this._robot.insufficientFunds(this._board[this._human.position].cost)) {
+        if (this._board[this._robot.position].owner == 1 && this._robot.funds < 0) {
             this._winner = "Human"
             this._winReason = "The Sphero landed on your tile and could not pay you."
             return true
@@ -479,6 +479,7 @@ router.post('/jail', function (req, res, next) {
     console.log("  -- /jail req.body:", req.body)
     spheropoly.lastAction = "jail"
     spheropoly.moveHumanToJail()
+    spheropoly.checkHumanLoss()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     function complete(msg) {
         callbackCount++
