@@ -64,7 +64,7 @@ def spheropoly(droid: SpheroEduAPI):
             exit()
         else:
             droid.set_matrix_rotation(FrameRotationOptions.ROTATE_90_DEGREES)
-            droid.play_matrix_animation(1)  # Play green smiley
+            droid.play_matrix_animation(1)  # Play green arrow
             roll = int(roll)
             droid.set_stabilization(True)
             for i in range(roll):
