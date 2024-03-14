@@ -121,15 +121,17 @@ function Tile(props) {
                 <div className="explanation">
                     You rolled a {response.human.lastRoll}. Please move your piece, then choose the following.
                 </div>
+                {response.board[String(response.human.position)].owner == 0
+                    && <>This tile is up for auction! You may choose to buy it.</>}
                 <div className="buttons">
                     {response.board[String(response.human.position)].owner == 0
                         && (buy == true
-                            ? <button className="command green selected">Buy</button>
-                            : <button className="command green" onClick={() => { setBuy(true) }}>Buy</button>)}
+                            ? <button className="command green selected"><i class="fa-solid fa-house-circle-check fa-2xl"></i></button>
+                            : <button className="command green" onClick={() => { setBuy(true) }}><i class="fa-solid fa-house-circle-check fa-2xl"></i></button>)}
                     {response.board[String(response.human.position)].owner == 0
                         && (buy == false
-                            ? <button className="command red selected">Auction</button>
-                            : <button className="command red" onClick={() => { setBuy(false) }}>Auction</button>)}
+                            ? <button className="command red selected"><i class="fa-solid fa-house-circle-xmark fa-2xl"></i></button>
+                            : <button className="command red" onClick={() => { setBuy(false) }}><i class="fa-solid fa-house-circle-xmark fa-2xl"></i></button>)}
                 </div>
                 <Form method="POST">
                     <input type="hidden" name="buy" value={buy} />
@@ -147,6 +149,11 @@ function Tile(props) {
                             Oh no! You landed on the robot's tile! Press the button to pay them!<br />
                             <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
                         </>}
+                    {response.human.position == 0
+                        && <>
+                            You have landed on GO! Press the button to get paid!<br />
+                            <button className="submit"><i class="fa-solid fa-money-bill fa-2xl"></i></button>
+                        </>}
                     {response.human.position == 3
                         && <>
                             You were caught trespassing! Please move your piece to jail, then press the button!<br />
@@ -155,12 +162,12 @@ function Tile(props) {
                     {response.human.position == 6
                         && <>
                             You arrived at the lake! Enjoy the view, then press the button!<br />
-                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                            <button className="submit"><i class="fa-solid fa-water fa-2xl"></i></button>
                         </>}
                     {response.human.position == 9
                         && <>
                             You're at jail, but thankfully not inside. Press the button to move on.<br />
-                            <button className="submit"><i class="fa-solid fa-check fa-2xl"></i></button>
+                            <button className="submit"><i class="fa-solid fa-person-running fa-2xl"></i></button>
                         </>}
                 </Form>
             </div>
