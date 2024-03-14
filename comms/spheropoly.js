@@ -264,6 +264,10 @@ class Spheropoly {
         console.log(this._human.position)
     }
 
+    go() {
+        this._human.giveMoney(200)
+    }
+
     moveHumanToJail() {
         this._human.position = 9
         this._human.jailed = true
@@ -284,26 +288,26 @@ class Spheropoly {
     checkHumanLoss() {
         if (this._board[this._human.position].owner == 2 && this._human.insufficientFunds(this._board[this._human.position].cost)) {
             this._winner = "Robot"
-            this._winReason = "The Sphero landed on your tile and could not pay you."
+            this._winReason = "You landed on the Sphero's tile but could not pay them."
         }
 
         // The human loses if they land in jail, have no funds, and have
         if (this._human.jailInescapable()) {
             this._winner = "Robot"
-            this._winReason = "The Sphero landed in jail, but had no properties and no way to get money."
+            this._winReason = "You landed in jail, but don't have any properties or any way to get money."
         }
     }
 
     checkRobotLoss() {
         if (this._board[this._robot.position].owner == 1 && this._robot.insufficientFunds(this._board[this._human.position].cost)) {
             this._winner = "Human"
-            this._winReason = "You landed on the Sphero's tile but could not pay them."
+            this._winReason = "The Sphero landed on your tile and could not pay you."
             return true
         }
         // The human loses if they land in jail, have no funds, and have
         if (this._robot.jailInescapable()) {
             this._winner = "Human"
-            this._winReason = "You landed in jail, but don't have any properties or any way to get money."
+            this._winReason = "The Sphero landed in jail, but had no properties and no way to get money."
             return true
         }
     }
@@ -430,7 +434,7 @@ class Spheropoly {
         }
         command(orders, complete)
         receive(complete)
-
+        this.checkRobotLoss()
     }
 }
 
@@ -523,6 +527,20 @@ router.post('/auction', function (req, res, next) {
 router.post('/pay', function (req, res, next) {
     var callbackCount = 0
     spheropoly.pay()
+    spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
+    spheropoly.lastAction = "tile"
+    function complete(msg) {
+        callbackCount++
+        console.log("callback Count:", callbackCount, "msg:", msg)
+        if (callbackCount >= 2) {
+            res.status(201).send(spheropoly.state)
+        }
+    }
+})
+
+router.post('/go', function (req, res, next) {
+    var callbackCount = 0
+    spheropoly.go()
     spheropoly.roboTurn(req.app.get("command"), req.app.get("awaitReply"), complete)
     spheropoly.lastAction = "tile"
     function complete(msg) {
