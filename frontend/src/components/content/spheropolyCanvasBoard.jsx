@@ -50,6 +50,7 @@ const spheroDrawCoords = {
 }
 
 const CanvasContainer = styled.div`
+    color: white;
     canvas{
         //border: 1px solid red;
     }
