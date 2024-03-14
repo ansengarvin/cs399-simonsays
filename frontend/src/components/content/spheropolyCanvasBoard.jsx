@@ -105,14 +105,28 @@ function drawPlayerPod(context, orientation, color, x, y) {
 
 function drawTileText(context, board, tile) {
     context.fillStyle = '#000000'
-    var text = ""
-    if (tile == 0 || tile == 3 || tile == 6 || tile == 9) {
-        text = board[tile]["name"]
-    } else {
-        text = "$" + board[tile]["cost"]
+    switch (board[tile]["owner"]) {
+        case -1:
+            context.fillText(board[tile]["name"], spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 10, [200])
+            break
+
+        case 0:
+            context.fillText("Unowned", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"], [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            break
+
+        case 1:
+            context.fillText("Human", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 50, [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            break
+
+        case 2:
+            context.fillText("Sphero", spheroDrawCoords[tile]["x"] - 20, spheroDrawCoords[tile]["y"] - 50, [200])
+            context.fillText("$" + board[tile]["cost"], spheroDrawCoords[tile]["x"], spheroDrawCoords[tile]["y"] + 40, [200])
+            break
     }
 
-    context.fillText(text, textDrawCoords[tile]["x"], textDrawCoords[tile]["y"], [200])
+
 }
 
 // Centralized location to keep track of colors rather than having to go in and type all of them myself.
@@ -129,21 +143,6 @@ const TileColors = {
     9: '#7033ff',
     10: '#d293ff',
     11: '#ff80b7',
-}
-
-const textDrawCoords = {
-    0: { "x": 187, "y": 485 },
-    1: { "x": 340, "y": 480 },
-    2: { "x": 340, "y": 330 },
-    3: { "x": 442, "y": 335 },
-    4: { "x": 438, "y": 186 },
-    5: { "x": 340, "y": 186 },
-    6: { "x": 340, "y": 90 },
-    7: { "x": 187, "y": 90 },
-    8: { "x": 187, "y": 186 },
-    9: { "x": 87, "y": 186 },
-    10: { "x": 87, "y": 335 },
-    11: { "x": 187, "y": 335 }
 }
 
 const playerDrawCoords = {
@@ -212,7 +211,7 @@ export function Board(props) {
         context.fillStyle = '#ff0000'
 
 
-        /* All of the allowable pieces
+        /* All of the allowable piecesf
         drawPlayerPod(context, 0, '#fcff51', 0, 0)
         drawPlayerPod(context, 1, '#fcff51', 200, 0)
         drawPlayerPod(context, 2, '#fcff51', 400, 0)
