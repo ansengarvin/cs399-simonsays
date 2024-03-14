@@ -8,7 +8,7 @@ import { EmptyBoard } from './emptyBoard'
 export async function action({ request, params }) {
     const data = Object.fromEntries(await request.formData())
     console.log("== action was called, data:", data)
-    console.log(data.position)
+    console.log("buy:", data.buy)
     if (data.phase == "start") {
         return fetch("http://localhost:19931/spheropoly/new",
             {
@@ -26,7 +26,8 @@ export async function action({ request, params }) {
         )
     } else if (data.phase == "tile") {
         if (data.owner == 0) {
-            if (data.buy) {
+            if (data.buy == "true") {
+                console.log("Buying")
                 return fetch(
                     "http://localhost:19931/spheropoly/buy",
                     {
@@ -34,6 +35,7 @@ export async function action({ request, params }) {
                     }
                 )
             } else {
+                console.log("Not buying")
                 return fetch(
                     "http://localhost:19931/spheropoly/auction",
                     {
