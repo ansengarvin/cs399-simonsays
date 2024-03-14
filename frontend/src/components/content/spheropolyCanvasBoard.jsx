@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
-import man2 from '../../man2.png'
+import human from '../../assets/squareSmile.png'
+import sphero from '../../assets/spheroBlackWhite.png'
 
 function Canvas(props) {
     return (
@@ -139,11 +140,36 @@ const playerDrawCoords = {
     11: { "x": 260, "y": 335 }
 }
 
+const spheroDrawCoords = {
+    0: { "x": 187, "y": 440 },
+    1: { "x": 340, "y": 435 },
+    2: { "x": 340, "y": 330 },
+    3: { "x": 442, "y": 335 },
+    4: { "x": 438, "y": 186 },
+    5: { "x": 340, "y": 186 },
+    6: { "x": 340, "y": 90 },
+    7: { "x": 187, "y": 90 },
+    8: { "x": 187, "y": 186 },
+    9: { "x": 87, "y": 186 },
+    10: { "x": 87, "y": 335 },
+    11: { "x": 187, "y": 335 }
+}
+
 function drawPlayer(context, image, tile) {
     context.drawImage(
         image,
         playerDrawCoords[tile]["x"],
         playerDrawCoords[tile]["y"],
+        25,
+        25
+    )
+}
+
+function drawSphero(context, image, tile) {
+    context.drawImage(
+        image,
+        spheroDrawCoords[tile]["x"],
+        spheroDrawCoords[tile]["y"],
         25,
         25
     )
@@ -253,7 +279,7 @@ export function Board(props) {
 
 
         const playerIcon = new Image()
-        playerIcon.src = man2
+        playerIcon.src = human
         console.log("Before load")
         playerIcon.onload = () => {
             console.log("onLoad")
@@ -269,6 +295,23 @@ export function Board(props) {
             drawPlayer(context, playerIcon, 9)
             drawPlayer(context, playerIcon, 10)
             drawPlayer(context, playerIcon, 11)
+        }
+
+        const spheroIcon = new Image()
+        spheroIcon.src = sphero
+        spheroIcon.onload = () => {
+            drawSphero(context, spheroIcon, 0)
+            drawSphero(context, spheroIcon, 1)
+            drawSphero(context, spheroIcon, 2)
+            drawSphero(context, spheroIcon, 3)
+            drawSphero(context, spheroIcon, 4)
+            drawSphero(context, spheroIcon, 5)
+            drawSphero(context, spheroIcon, 6)
+            drawSphero(context, spheroIcon, 7)
+            drawSphero(context, spheroIcon, 8)
+            drawSphero(context, spheroIcon, 9)
+            drawSphero(context, spheroIcon, 10)
+            drawSphero(context, spheroIcon, 11)
         }
 
 
