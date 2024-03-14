@@ -315,7 +315,8 @@ export function Board(props) {
     return (
         <div>
             <CanvasContainer>
-                <canvas ref={canvasRef} />
+                <canvas ref={canvasRef} /><br />
+                {data.summary != "" && <>{data.summary}</>}
             </CanvasContainer>
         </div>
     )
