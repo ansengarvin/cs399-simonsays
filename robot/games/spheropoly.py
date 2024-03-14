@@ -3,6 +3,8 @@ from lib.status import not_moving
 from lib.pipeline import getCommand, sendResponse
 from lib.droidState import DroidState
 from lib.commandHelper import CommandHelper
+from anims.anims import register_spheropoly_anims
+from spherov2.commands.io import FrameRotationOptions
 
 
 SPEED = 35
@@ -45,10 +47,13 @@ map_instructions = [
 
 
 def spheropoly(droid: SpheroEduAPI):
+    register_spheropoly_anims(droid)
+    droid.set_matrix_rotation(FrameRotationOptions.ROTATE_270_DEGREES)
     droid.set_stabilization(False)
     print("Welcome to Spheropoly!")
     state = DroidState()
     commandHelper = CommandHelper()
+    droid.play_matrix_animation(1)
     while True:
         getCommand(commandHelper)
         print(commandHelper.command)
@@ -58,6 +63,7 @@ def spheropoly(droid: SpheroEduAPI):
         if roll == "x":
             exit()
         else:
+            droid.play_matrix_animation(1)  # Play green smiley
             roll = int(roll)
             droid.set_stabilization(True)
             for i in range(roll):
@@ -69,10 +75,12 @@ def spheropoly(droid: SpheroEduAPI):
 
             # If jailed is set to true, then the robot must be on tile 3. Roll forward 6 squares to arrive to jail.
             if commandHelper.command["jailed"]:
+                droid.play_matrix_animation(0)  # Play purple arrow
                 for i in range(6):
                     current_square = (state.get_position() + i) % 12
                     print("At square ", i)
                     map_instructions[current_square](droid, state)
                 state.set_position(9)
+                droid.play_matrix_animation(2)  # Play red frowny
 
         sendResponse("Done")
