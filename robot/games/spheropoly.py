@@ -7,6 +7,7 @@ from lib.commandHelper import CommandHelper
 
 SPEED = 35
 
+
 def roll_until_collision(droid: SpheroEduAPI, heading):
     """
     Roll forward at input heading until the droid is no longer moving.
@@ -27,10 +28,6 @@ def right(droid: SpheroEduAPI, state: DroidState):
     roll_until_collision(droid, state.get_heading())
 
 
-def jail(droid: SpheroEduAPI, state: DroidState):
-    print("Jail")
-    
-
 map_instructions = [
     left,
     left,
@@ -43,8 +40,9 @@ map_instructions = [
     right,
     left,
     left,
-    right
+    right,
 ]
+
 
 def spheropoly(droid: SpheroEduAPI):
     droid.set_stabilization(False)
@@ -57,7 +55,7 @@ def spheropoly(droid: SpheroEduAPI):
 
         roll = commandHelper.command["roll"]
 
-        if roll == 'x':
+        if roll == "x":
             exit()
         else:
             roll = int(roll)
@@ -68,5 +66,13 @@ def spheropoly(droid: SpheroEduAPI):
                 map_instructions[current_square](droid, state)
             state.set_position((state.get_position() + roll) % 12)
             droid.set_stabilization(False)
+
+            # If jailed is set to true, then the robot must be on tile 3. Roll forward 6 squares to arrive to jail.
+            if commandHelper.command["jailed"]:
+                for i in range(6):
+                    current_square = (state.get_position() + i) % 12
+                    print("At square ", i)
+                    map_instructions[current_square](droid, state)
+                state.set_position(9)
 
         sendResponse("Done")
