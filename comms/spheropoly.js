@@ -304,7 +304,7 @@ class Spheropoly {
                         } else {
                             console.log("Robot cannot afford to buy the property they landed on. Sending to auction.")
                             this._auctionTile = this._robot.position
-                            this._summary = this._summary + " The robot could not afford the property it landed on and it was sent to auction."
+                            this._summary = this._summary + " The robot could not afford the property it landed on, so it went back up on the market."
                         }
                         break
                     case 1: // Owned by the player. The robot must give them money or lose.
@@ -332,7 +332,6 @@ class Spheropoly {
         console.log("Robot got a", roll)
         this._robot.lastRoll = roll
         this.moveRobot(roll)
-        this.roboAuction()
         this.roboTile()
         const orders = {
             "roll": roll,
